@@ -123,3 +123,12 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'webshop/static')]
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom authentication backends
+AUTHENTICATION_BACKENDS = [
+    'webshop.authentication.EmailBackend',  # Custom backend
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+]
+
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False

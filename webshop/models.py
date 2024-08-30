@@ -4,17 +4,13 @@ from django.contrib.auth.models import User
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     home_address = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
-    GENDER_CHOICES = (
-        ('M', 'Muški'),
-        ('F', 'Ženski'),
-    )
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
 
     def __str__(self):
-        return f"User {self.id} - {self.name}"
+        return f"User {self.id} - {self.name} - {self.surname}"
     
 class Category(models.Model):
     name = models.CharField(max_length=100)

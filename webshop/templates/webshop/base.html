@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base</title>
+    <title>{% block title %}Base{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'webshop/css/base.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
     <nav>
@@ -14,8 +15,10 @@
             <li><a href="#">Muškarci</a></li>
             <li><a href="#">LOGO</a></li>
             <li><a href="#">Traži</a></li>
-
         </ul>
     </nav>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

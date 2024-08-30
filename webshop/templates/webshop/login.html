@@ -1,11 +1,39 @@
-{% extends "webshop/base.html" %}
+{% extends 'webshop/base.html' %}
+
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/login.css' %}">
+{% endblock %}
 
 {% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-  <p>Nemate profil? <a href="{% url 'register' %}">Registrirajte se ovdje</a></p>
+<div class="login-container">
+    <h2>Prijava</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Lozinka:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Prijavi se</button>
+    </form>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="register-link">
+        <p>Nemate račun? <a href="{% url 'webshop:register' %}">Registrirajte se</a></p>
+    </div>
+</div>
 {% endblock %}
