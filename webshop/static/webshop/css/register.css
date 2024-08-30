@@ -1,14 +1,17 @@
 .register-container {
+    width: 100%;
     max-width: 500px;
-    margin: 0 auto;
+    margin: 50px auto 50px;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+    border: 1px solid black; 
+    border-radius: 8px; 
+    background-color: white; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    font-family: 'Times New Roman', Times, serif;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .form-group label {
@@ -19,7 +22,9 @@
 .form-group input {
     width: 100%;
     padding: 8px;
+    max-height: 30px;
     box-sizing: border-box;
+    border: 1px solid #ccc;
 }
 
 button {
@@ -34,4 +39,11 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+.message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
 }

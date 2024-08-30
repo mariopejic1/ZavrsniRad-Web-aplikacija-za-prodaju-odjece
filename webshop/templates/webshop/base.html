@@ -15,6 +15,15 @@
             <li><a href="#">Muškarci</a></li>
             <li><a href="#">LOGO</a></li>
             <li><a href="#">Traži</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'webshop:profile' %}">Profil</a></li>
+                <li><a href="{% url 'webshop:logout' %}">Odjava</a></li>
+            {% else %}
+                <li><a href="{% url 'webshop:login' %}">Prijava</a></li>
+            {% endif %}
+            
+        </ul>
+
         </ul>
     </nav>
     <div class="content">
