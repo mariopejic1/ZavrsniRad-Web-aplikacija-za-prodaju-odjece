@@ -1,0 +1,30 @@
+{% extends 'webshop/base.html' %}
+
+{% load static %}
+
+{% block title %}Načini Plačanja{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/payment.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="payment-container">
+
+    <h1>Načini plaćanja</h1>
+
+    <p>Nakon što izvrši narudžbu proizvoda, kupac može platiti na jedan od sljedećih načina:</p>
+    
+    <ol>
+        <li>
+            <strong>Plaćanje gotovinom prilikom preuzimanja narudžbe.</strong>
+            <p>Opcija plaćanja pouzećem vam omogućuje da iznos narudžbe podmirite prilikom same dostave na navedenu adresu, tek kada robu vidite pred sobom.
+                Plaćanje pouzećem se vrši isključivo u gotovini, dostavljaču prilikom same isporuke na navedenu adresu.</p>
+        </li>
+        <li>
+            <strong>Internet bankarstvom.</strong>
+            <p>U ovome radu opcija plaćanja Internet bankrstvom neće biti omogućena.</p>
+        </li>
+    </ol>
+</div>
+{% endblock %}

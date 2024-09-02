@@ -47,7 +47,7 @@ nav ul li.left {
 }
 
 nav ul li.logo {
-    flex-grow: 1;
+    flex: 1;
     text-align: center;
 }
 
