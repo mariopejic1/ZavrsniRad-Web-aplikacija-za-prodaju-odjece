@@ -77,3 +77,6 @@ def returns_view(request):
 
 def payment_view(request):
     return render(request, 'webshop/payment.html') 
+
+def delivery_view(request):
+    return render(request, 'webshop/delivery.html') 

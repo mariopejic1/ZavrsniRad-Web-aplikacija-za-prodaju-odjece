@@ -1,0 +1,20 @@
+{% extends 'webshop/base.html' %}
+
+{% load static %}
+
+{% block title %}Načini Plačanja{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/delivery.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="delivery-container">
+
+    <h1>Informacije o dostavi</h1>
+
+    <p>Dostava se obavlja na području cijele Republike Hrvatske putem našeg logističkog partnera, Hrvatske pošte.</p>
+    <p>Naručeni proizvodi dostavljaju se do vaših kućnih vrata ili do jednog od poštanskih ureda ili paketomata Hrvatske pošte. Poštanski ured ili paketomat moći ćete odabrati tek nakon što vas Hrvatska pošta obavijesti da vaša pošiljka stiže.</p>
+    <p>Neizvršena isporuka: Ako kupac nije zatečen na navedenoj adresi u vrijeme dostave, bit će kontaktiran od strane dostavne službe radi dogovora o ponovnoj dostavi.</p>
+</div>
+{% endblock %}
