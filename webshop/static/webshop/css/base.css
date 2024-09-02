@@ -2,7 +2,18 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    height: 100%;
     background-color: white;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    flex: 1;
 }
 
 nav {
@@ -15,21 +26,85 @@ nav ul {
     padding: 0;
     list-style-type: none;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
 nav ul li {
-    margin-right: 20px; 
+    margin: 0 10px;
+    margin-right: 10px; 
 }
 
-nav a {
-    text-decoration: none;
+nav ul li a {
     color: white;
+    text-decoration: none;
     font-family: 'Times New Roman', Times, serif;
-    font-size: 18px;
+    display: block;
 }
 
-nav a:hover {
-    color: #ff9900; /
+nav ul li.left {
+    margin-left: 25px;
+}
+
+nav ul li.logo {
+    flex-grow: 1;
+    text-align: center;
+}
+
+nav ul li.right {
+    margin-right: 25px;
+}
+
+nav ul li a:hover {
+    color: #ff9900; 
+}
+
+nav ul li.logo a {
+    font-weight: bold;
+    font-size: 1.5em; 
+}
+
+footer {
+    display: flex;
+    justify-content: space-around;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.footer-section h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+.footer-section p,
+.footer-section ul {
+    margin: 10px 0;
+    font-family: Georgia, 'Times New Roman', Times, serif
+}
+
+.footer-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+    color: #ff9900;
 }

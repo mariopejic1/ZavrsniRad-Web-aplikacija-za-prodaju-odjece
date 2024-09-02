@@ -70,4 +70,7 @@ def register_view(request):
     return render(request, 'webshop/register.html')
 
 def profile_view(request):
-    return render(request, 'webshop/profile.html')    
+    return render(request, 'webshop/profile.html') 
+
+def returns_view(request):
+    return render(request, 'webshop/returns.html')    

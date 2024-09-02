@@ -1,0 +1,43 @@
+{% extends 'webshop/base.html' %}
+
+{% load static %}
+
+{% block title %}Returns{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/returns.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="returns-container">
+    <h1>Povrati i Zamjene</h1>
+
+    <div>
+        <h3>Uvjeti povrata i zamjene</h3>
+        <p>Povrati i zamjene mogući su samo u roku od <strong>30 dana</strong> od dana dostave.
+        Kako bismo osigurali da svaki povrat i zamjena prođu što jednostavnije, molimo vas da se pridržavate sljedećih uvjeta:</p>
+            <ul>
+                <li>Kupac ima pravo na povrat sredstava za robu koja nije dostavljena.</li>
+                <li>Povrat ili zamjena nisu mogući za proizvode koji imaju grešku ili oštećenja koja nisu nastalu u prijevozu.</li>
+            </ul>
+    </div>
+
+    <div>
+        <h3>Postupak povrata i zamjene</h3>
+        <ol>
+            <li><strong>Popunjavanje povratnog listića:</strong> Uz vašu narudžbu, dobit ćete povratni listić koji je potrebno popuniti. Na listiću označite artikle koje želite vratiti ili zamijeniti.</li>
+            <li><strong>Zamjena artikala:</strong> Artikli mogu biti zamijenjeni <strong>isključivo za drugu veličinu</strong> istog proizvoda.</li>
+            <li><strong>Slanje povrata ili zamjene:</strong> Nakon popunjavanja povratnog listića, isti zajedno s robom pošaljite putem <strong>Hrvatske pošte</strong> na našu adresu:<br> 
+                WebShop d.o.o.<br>
+                Ulica Primjera 12<br>
+                10000 Zagreb<br>
+                Hrvatska</li>
+            <li><strong>Troškovi povrata:</strong> Troškove povrata ili zamjene snosi kupac.</li>
+            <li><strong>Pregled artikala:</strong> Nakon što primimo vaš paket, pregledat ćemo artikle kako bismo se uvjerili da su u izvornom stanju bez oštećenja.</li>
+            <li><strong>Povrat novca:</strong> Ako su artikli vraćeni u skladu s gore navedenim uvjetima, povrat novca bit će izvršen na vaš bankovni račun u roku od 14 radnih dana.</li>
+        </ol>
+    </div>
+    
+</div>
+{% endblock %}

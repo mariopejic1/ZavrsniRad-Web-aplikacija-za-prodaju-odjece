@@ -11,23 +11,43 @@
 <body>
     <nav>
         <ul>
-            <li><a href="#">Žene</a></li>
-            <li><a href="#">Muškarci</a></li>
-            <li><a href="#">LOGO</a></li>
-            <li><a href="#">Traži</a></li>
+            <li class="left"><a href="#">Žene</a></li>
+            <li class="left"><a href="#">Muškarci</a></li>
+            <li class="logo"><a href="#">LOGO</a></li>
+            <li class="right"><a href="#">Traži</a></li>
             {% if user.is_authenticated %}
-                <li><a href="{% url 'webshop:profile' %}">Profil</a></li>
-                <li><a href="{% url 'webshop:logout' %}">Odjava</a></li>
+                <li class="right"><a href="{% url 'webshop:profile' %}">Profil</a></li>
+                <li class="right"><a href="#">Košarica</a></li>
+                <li class="right"><a href="{% url 'webshop:logout' %}">Odjava</a></li>
             {% else %}
-                <li><a href="{% url 'webshop:login' %}">Prijava</a></li>
-            {% endif %}
-            
-        </ul>
-
+                <li class="right"><a href="{% url 'webshop:login' %}">Prijava</a></li>
+            {% endif %}          
         </ul>
     </nav>
     <div class="content">
         {% block content %}{% endblock %}
     </div>
+
+    <footer>
+        <div class="footer-section">
+            <h3>O webshopu</h3>
+            <p>Naš webshop nudi širok izbor moderne i kvalitetne odjeće. Bilo da tražite najnovije modne trendove ili klasične komade,
+                kod nas ćete pronaći sve što vam je potrebno da osvježite svoju garderobu.
+                Kupujte jednostavno i brzo uz našu sigurnu online platformu!</p>
+        </div>
+        <div class="footer-section">
+            <h3>Kontakt</h3>
+            <p>Telefon: +123 456 789</p>
+            <p>Email: info@webshop.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Korisni linkovi</h3>
+            <ul>
+                <li><a href="{% url 'webshop:returns' %}">Povrati i zamjene</a></li>
+                <li><a href="#">Način dostave</a></li>
+                <li><a href="#">Način plaćanja</a></li>
+            </ul>
+        </div>
+    </footer>
 </body>
 </html>
