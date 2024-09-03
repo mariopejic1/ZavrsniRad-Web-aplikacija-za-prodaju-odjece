@@ -70,7 +70,49 @@ def register_view(request):
     return render(request, 'webshop/register.html')
 
 def profile_view(request):
-    return render(request, 'webshop/profile.html') 
+    user_account = Account.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        user_account.name = request.POST.get('name')
+        user_account.surname = request.POST.get('surname')
+        user_account.phone = request.POST.get('phone')
+        user_account.save()
+
+        return redirect('webshop:profile')
+
+    return render(request, 'webshop/profile.html', {'user_account': user_account}) 
+
+def update_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user_account = user.Account  
+
+        user_account.name = request.POST.get('name')
+        user_account.surname = request.POST.get('surname')
+        user_account.email = request.POST.get('email')
+        user_account.home_address = request.POST.get('home_address')
+        user_account.phone = request.POST.get('phone')
+
+        user_account.save()
+
+        return redirect('webshop:profile')  
+
+    return render(request, 'webshop/profile.html')
+
+def update_bank_details(request):
+    user_account = Account.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        iban = request.POST.get('iban')
+        bank_name = request.POST.get('bank_name')
+
+        user_account.iban = iban
+        user_account.bank_name = bank_name
+        user_account.save()
+
+        return redirect('webshop:profile')
+
+    return render(request, 'webshop/profile.html', {'user_account': user_account})
 
 def returns_view(request):
     return render(request, 'webshop/returns.html')    

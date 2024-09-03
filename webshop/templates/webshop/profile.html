@@ -1,6 +1,56 @@
 {% extends 'webshop/base.html' %}
 
+{% load static %}
+
+{% block title %}Načini Plačanja{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/profile.css' %}">
+{% endblock %}
+
 {% block content %}
-<p>profil
-</p>
+<div class="profile-container">
+    <h2>{{ user_account.name }} {{ user_account.surname }}</h2>
+
+    <div class="dropdown">
+        <button class="dropdown-button" onclick="toggleDropdown('user-data-dropdown')">Podaci korisnika</button>
+        <div id="user-data-dropdown" class="dropdown-content">
+            <form action="{% url 'webshop:update_profile' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Ime:</label>
+                    <input type="text" id="name" name="name" value="{{ user_account.name }}">
+                </div>
+                <div class="form-group">
+                    <label for="surname">Prezime:</label>
+                    <input type="text" id="surname" name="surname" value="{{ user_account.surname }}">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefon:</label>
+                    <input type="text" id="phone" name="phone" value="{{ user_account.phone }}">
+                </div>
+                <button type="submit">Spremi promjene</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="dropdown">
+        <button class="dropdown-button" onclick="toggleDropdown('bank-data-dropdown')">Podaci bankovne kartice</button>
+        <div id="bank-data-dropdown" class="dropdown-content">
+            <p>Vlasnik kartice: {{ user_account.name }} {{ user_account.surname }}</p>
+            <p>IBAN: <input type="text" value="{{ user_account.iban }}" readonly></p>
+            <p>Banka: <input type="text" value="{{ user_account.bank }}" readonly></p>
+        </div>
+    </div>
+
+    <div>
+        <a href="{% url 'webshop:returns' %}">Povrati i zamjene</a>
+    </div>
+    <div>
+        <a href="{% url 'webshop:delivery' %}">Način dostave</a>
+    </div>
+    <div>
+        <a href="{% url 'webshop:payment' %}">Načini plaćanja</a>
+    </div>
+</div>
 {% endblock %}

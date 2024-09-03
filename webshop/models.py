@@ -8,6 +8,8 @@ class Account(models.Model):
     email = models.EmailField(unique=True)
     home_address = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
+    iban = models.CharField(max_length=34, blank=True, null=True)  
+    bank = models.CharField(max_length=255, blank=True, null=True) 
 
     def __str__(self):
         return f"User {self.id} - {self.name} - {self.surname}"

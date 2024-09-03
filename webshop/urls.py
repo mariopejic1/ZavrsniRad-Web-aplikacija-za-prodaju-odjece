@@ -13,4 +13,6 @@ urlpatterns = [
     path('returns/', views.returns_view, name='returns'),
     path('payment/', views.payment_view, name='payment'),
     path('delivery/', views.delivery_view, name='delivery'),
+    path('update-profile/', views.update_profile, name='update_profile'),
+    path('update_bank_details/', views.update_bank_details, name='update_bank_details'),
 ]
