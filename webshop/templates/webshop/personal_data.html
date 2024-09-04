@@ -1,0 +1,62 @@
+{% extends 'webshop/base.html' %}
+
+{% load static %}
+
+{% block title %}Moji podaci{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/personal_data.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="personal-data-container">
+    <h2>Osobni podaci</h2>
+    
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Ime:</label>
+            <input type="text" id="name" name="name" value="{{ user_account.name }}">
+        </div>
+        <div class="form-group">
+            <label for="surname">Prezime:</label>
+            <input type="text" id="surname" name="surname" value="{{ user_account.surname }}">
+        </div>
+        <div class="form-group">
+            <label for="phone">Telefon:</label>
+            <input type="text" id="phone" name="phone" value="{{ user_account.phone }}">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ user_account.email }}">
+        </div>
+        <div class="form-group">
+            <label for="home_address">Adresa:</label>
+            <input type="text" id="home_address" name="home_address" value="{{ user_account.home_address }}">
+        </div>
+        
+</div>       
+
+<div class = "bank-details-container">
+    <h2>Bankovni podaci</h2>
+    <div class="info-container">
+        <p>
+            Unesite ili uredite svoje bankovne podatke kako biste mogli primiti povrat za narudžbe plaćene pouzećem.
+        </p>
+    </div>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="iban">IBAN:</label>
+            <input type="text" id="iban" name="iban" value="{{ user_account.iban }}">
+        </div>
+        <div class="form-group">
+            <label for="bank">Banka:</label>
+            <input type="text" id="bank" name="bank" value="{{ user_account.bank }}">
+        </div>
+        <div class="button-container">
+            <button type="submit">Spremi promjene</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

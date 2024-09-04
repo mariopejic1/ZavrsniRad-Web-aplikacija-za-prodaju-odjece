@@ -1,48 +1,32 @@
 .profile-container {
-    width: 80%;
-    margin: 0 auto;
+    width: 300px; 
+    margin: 60px auto;
     padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 10px;
+.profile-container h2 {
+    font-size: 28px;
+    margin: auto 0 15px;
+    font-family:'Times New Roman', Times, serif;
 }
 
-.dropdown-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
+.profile-container a {
     display: block;
+    color: black; 
+    text-decoration: none; 
+    padding: 10px 0; 
+    border-bottom: 1px solid #ddd; 
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 300px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    padding: 10px;
+.profile-container a:last-child {
+    border-bottom: none; 
 }
 
-.dropdown-content p, .dropdown-content form {
-    margin: 0;
-    padding: 10px 0;
+.profile-container a:hover {
+    color: #ff9900; 
 }
 
-.dropdown-content input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-}
-
-.show {
-    display: block;
-}
