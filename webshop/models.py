@@ -16,23 +16,16 @@ class Account(models.Model):
     
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.name
+
+class SubCategory(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategories')
     
-class Product(models.Model):
-    category = models.ForeignKey('Category', on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    details = models.TextField()
-    composition = models.TextField()
-    origin = models.CharField(max_length=255)
-    care_instructions = models.TextField()
-    sizes = models.ManyToManyField('Size', through='ProductSize') 
-
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.category.name}"
 
 class Color(models.Model):
     name = models.CharField(max_length=100)
@@ -45,26 +38,36 @@ class Size(models.Model):
 
     def __str__(self):
         return self.name
-
-class ProductVariation(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variations')
-    color = models.ForeignKey(Color, on_delete=models.CASCADE)
-    stock_status = models.CharField(max_length=20, choices=(
-        ('IN_STOCK', 'Na zalihama'),
-        ('OUT_OF_STOCK', 'Nema na zalihama'),
-    ), default='IN_STOCK')
-    image = models.ImageField(upload_to='product_images/', blank=True, null=True)  
-
+     
+class Product(models.Model):
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    details = models.TextField()
+    composition = models.TextField()
+    origin = models.CharField(max_length=255)
+    care_instructions = models.TextField()
+    available_colors = models.ManyToManyField(Color, through='ProductColorSize')
+    available_sizes = models.ManyToManyField(Size, through='ProductColorSize')
+    
     def __str__(self):
-        return f"{self.product.name} - {self.color.name}"
+        return self.name
 
-class ProductSize(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_sizes')  
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='product_images/')
+    
+    def __str__(self):
+        return f"Image for {self.product.name}"
+
+class ProductColorSize(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='color_size_combinations')
+    color = models.ForeignKey(Color, on_delete=models.CASCADE)
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.product.name} - {self.size.name}"
-    
+        return f"{self.product.name} - {self.color.name} - {self.size.size}"
+
 class Order(models.Model):
     STATUS_CHOICES = (
         ('IP', 'U pripremi'),
