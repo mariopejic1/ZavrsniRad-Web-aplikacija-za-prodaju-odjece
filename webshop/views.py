@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import Account, Product, Category
+from .models import Account, Product, Category, SubCategory
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 
@@ -117,20 +117,15 @@ def payment_view(request):
 def delivery_view(request):
     return render(request, 'webshop/delivery.html') 
 
-def articles_display_view(request, category_slug):
-    category = get_object_or_404(Category, slug=category_slug)
-    
-    products = Product.objects.filter(category=category)
-    
-    items_per_page = int(request.GET.get('items_per_page', 4))
-    paginator = Paginator(products, items_per_page)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+def articles_display_view(request, category_name, subcategory_name):
+    # Retrieve the category
+    category = get_object_or_404(Category, slug=category_name)
+
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
     
     context = {
-        'products': page_obj,
-        'category_name': category.name,
-        'items_per_page': items_per_page
+        'category_name': category_name,
+        'subcategory_name': subcategory_name,
     }
     
-    return render(request, 'product_list.html', context)
+    return render(request, 'webshop/articles_display.html', context)

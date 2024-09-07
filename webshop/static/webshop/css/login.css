@@ -8,12 +8,19 @@
     padding: 20px; 
     box-sizing: border-box; 
 }
+
+.login-container h2{
+    font-size: 22px;
+    margin-top: 0;
+}
+
 .form-group {
     margin-bottom: 15px;
 }
 
 .form-group label {
     display: block;
+    font-size: 14px;
     margin-bottom: 5px;
 }
 
@@ -41,4 +48,12 @@ button:hover {
     color: red;
     margin-top: 10px;
     font-size: 12px;
+}
+
+.register-link{
+    font-size: 14px;
+}
+
+.register-link p{
+    margin-bottom: 0;
 }

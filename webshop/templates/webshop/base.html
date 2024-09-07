@@ -10,41 +10,48 @@
 </head>
 <body>
     <nav>
-        <ul>
-            <ul>
-                <li class="dropdown">
-                    <a href="#">Women</a>
-                    <div class="dropdown-content">
-                        <a href="{% url 'webshop:articles_display' 'dresses' %}">Haljine</a>
-                        <a href="{% url 'webshop:articles_display' 'shirts' %}">Košulje</a>
-                        <a href="{% url 'webshop:articles_display' 't-shirts' %}">Majice</a>
-                        <a href="{% url 'webshop:articles_display' 'pants' %}">Hlače</a>
-                        <a href="{% url 'webshop:articles_display' 'jackets' %}">Jakne i kaputi</a>
-                        <a href="{% url 'webshop:articles_display' 'Sweatshirts' %}">Pletivo</a>
-                    </div>
-                </li>
-                <li class="dropdown">
-                    <a href="#">Men</a>
-                    <div class="dropdown-content">
-                        <a href="{% url 'webshop:articles_display' 'shirts' %}">Kušulje</a>
-                        <a href="{% url 'webshop:articles_display' 't-shirts' %}">Majice</a>
-                        <a href="{% url 'webshop:articles_display' 'pants' %}">Hlače</a>
-                        <a href="{% url 'webshop:articles_display' 'jackets' %}">Jakne i kaputi</a>
-                        <a href="{% url 'webshop:articles_display' 'sweatshirts' %}">PLetivo</a>
-                    </div>
-                </li>
-            </ul>
-            <li class="logo"><a href="#">LOGO</a></li>
-            <li class="right"><a href="#">Traži</a></li>
-            {% if user.is_authenticated %}
-                <li class="right"><a href="{% url 'webshop:profile' %}">Profil</a></li>
-                <li class="right"><a href="#">Košarica</a></li>
-                <li class="right"><a href="{% url 'webshop:logout' %}">Odjava</a></li>
-            {% else %}
-                <li class="right"><a href="{% url 'webshop:login' %}">Prijava</a></li>
-            {% endif %}          
-        </ul>
+            <div class="nav-left">
+                <ul>
+                    <li class="dropdown">
+                        <a href="#">ŽENE</a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'webshop:articles_display' 'female' 'dresses' %}">Haljine</a>
+                            <a href="{% url 'webshop:articles_display' 'female' 'shirts' %}">Košulje</a>
+                            <a href="{% url 'webshop:articles_display' 'female' 't-shirts' %}">Majice</a>
+                            <a href="{% url 'webshop:articles_display' 'female' 'pants' %}">Hlače</a>
+                            <a href="{% url 'webshop:articles_display' 'female' 'jackets' %}">Jakne i kaputi</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">MUŠKARCI</a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'webshop:articles_display' 'male' 'shirts' %}">Košulje</a>
+                            <a href="{% url 'webshop:articles_display' 'male' 't-shirts' %}">Majice</a>
+                            <a href="{% url 'webshop:articles_display' 'male' 'pants' %}">Hlače</a>
+                            <a href="{% url 'webshop:articles_display' 'male' 'jackets' %}">Jakne i kaputi</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="logo">
+                <a href="#">LOGO</a>
+            </div>
+    
+            <div class="nav-right">
+                <ul>
+                    <li><a href="#">TRAŽI</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'webshop:profile' %}">PROFIL</a></li>
+                        <li><a href="#">KOŠARICA</a></li>
+                        <li><a href="{% url 'webshop:logout' %}">ODJAVA</a></li>
+                    {% else %}
+                        <li><a href="{% url 'webshop:login' %}">PRIJAVA</a></li>
+                    {% endif %}
+                </ul>
+            </div>
     </nav>
+    
     <div class="content">
         {% block content %}{% endblock %}
     </div>

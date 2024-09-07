@@ -25,10 +25,11 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 class SubCategory(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategories')
     
     def __str__(self):
@@ -48,6 +49,7 @@ class Size(models.Model):
      
 class Product(models.Model):
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(SubCategory, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     details = models.TextField()
@@ -73,7 +75,7 @@ class ProductColorSize(models.Model):
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.product.name} - {self.color.name} - {self.size.size}"
+        return f"{self.product.name} - {self.color.name} - {self.size.name}"
 
 class Order(models.Model):
     STATUS_CHOICES = (
