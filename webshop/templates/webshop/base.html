@@ -11,8 +11,29 @@
 <body>
     <nav>
         <ul>
-            <li class="left"><a href="#">Žene</a></li>
-            <li class="left"><a href="#">Muškarci</a></li>
+            <ul>
+                <li class="dropdown">
+                    <a href="#">Women</a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'webshop:articles_display' 'dresses' %}">Haljine</a>
+                        <a href="{% url 'webshop:articles_display' 'shirts' %}">Košulje</a>
+                        <a href="{% url 'webshop:articles_display' 't-shirts' %}">Majice</a>
+                        <a href="{% url 'webshop:articles_display' 'pants' %}">Hlače</a>
+                        <a href="{% url 'webshop:articles_display' 'jackets' %}">Jakne i kaputi</a>
+                        <a href="{% url 'webshop:articles_display' 'Sweatshirts' %}">Pletivo</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Men</a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'webshop:articles_display' 'shirts' %}">Kušulje</a>
+                        <a href="{% url 'webshop:articles_display' 't-shirts' %}">Majice</a>
+                        <a href="{% url 'webshop:articles_display' 'pants' %}">Hlače</a>
+                        <a href="{% url 'webshop:articles_display' 'jackets' %}">Jakne i kaputi</a>
+                        <a href="{% url 'webshop:articles_display' 'sweatshirts' %}">PLetivo</a>
+                    </div>
+                </li>
+            </ul>
             <li class="logo"><a href="#">LOGO</a></li>
             <li class="right"><a href="#">Traži</a></li>
             {% if user.is_authenticated %}

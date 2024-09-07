@@ -15,4 +15,5 @@ urlpatterns = [
     path('delivery/', views.delivery_view, name='delivery'),
     path('personal_data/', views.personal_data_view, name='personal_data'),
     path('orders/', views.orders_view, name='orders'),
+     path('kategorija/<slug:category_slug>/', views.articles_display_view, name='articles_display'),
 ]

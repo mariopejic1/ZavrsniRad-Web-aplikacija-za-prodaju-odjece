@@ -1,0 +1,56 @@
+{% extends 'webshop/base.html' %}
+
+{% load static %}
+
+{% block title %}Katalog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/articles_display.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="filter-sort-bar">
+    <div class="filter-section">
+        <h4>Filtriranje</h4>
+        <!-- Ovdje možeš dodati opcije za filtriranje (npr. boje, veličine) -->
+    </div>
+    <div class="sort-section">
+        <h4>Sortiranje</h4>
+        <form>
+            <label for="items-per-page">Prikaži:</label>
+            <input type="radio" name="layout" id="two-items" checked>
+            <label for="two-items">2 artikla</label>
+
+            <input type="radio" name="layout" id="four-items">
+            <label for="four-items">4 artikla</label>
+
+            <input type="radio" name="layout" id="eight-items">
+            <label for="eight-items">8 artikala</label>
+        </form>
+    </div>
+</div>
+
+<div class="product-grid two-items-layout">
+    <div class="product-item">
+        <img src="shirt1.jpg" alt="Proizvod 1">
+        <h5>Proizvod 1</h5>
+        <p>199 HRK</p>
+    </div>
+    <div class="product-item">
+        <img src="shirt2.jpg" alt="Proizvod 2">
+        <h5>Proizvod 2</h5>
+        <p>249 HRK</p>
+    </div>
+    <div class="product-item">
+        <img src="shirt3.jpg" alt="Proizvod 3">
+        <h5>Proizvod 3</h5>
+        <p>299 HRK</p>
+    </div>
+    <div class="product-item">
+        <img src="shirt4.jpg" alt="Proizvod 4">
+        <h5>Proizvod 4</h5>
+        <p>349 HRK</p>
+    </div>
+    <!-- Dodaj još proizvoda -->
+</div>
+{% endblock %}
