@@ -9,32 +9,39 @@
 {% endblock %}
 
 {% block content %}
-<div class="product-container">
-  <div class="product-image-wrapper">
-    <div class="product-carousel">
-      {% for image in product.images.all %}
-        <input type="radio" name="carousel-{{ product.id }}" id="slide{{ forloop.counter }}-{{ product.id }}">
-      {% endfor %}
+<div class="articles-container">
+    {% for product in products %}
+    <div class="article">
+        <div class="article-image-wrapper">
+            <div class="carousel">
+                <!-- Radio buttons for slides -->
+                {% for image in product.images.all %}
+                <input type="radio" name="carousel-{{ product.id }}" id="slide{{ forloop.counter }}-{{ product.id }}" {% if forloop.first %}checked{% endif %}>
+                {% endfor %}
 
-      <div class="carousel-slides">
-        {% for image in product.images.all %}
-          <div class="carousel-slide">
-            <img src="{{ image.image.url }}" alt="{{ product.name }}">
-          </div>
-        {% endfor %}
-      </div>
+                <!-- Carousel images -->
+                <div class="carousel-images">
+                    {% for image in product.images.all %}
+                    <div class="carousel-slide">
+                        <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                    </div>
+                    {% endfor %}
+                </div>
 
-      <div class="carousel-controls">
-        {% for image in product.images.all %}
-          <label for="slide{{ forloop.counter }}-{{ product.id }}" class="control {% if forloop.first %}prev{% else %}next{% endif %}"></label>
-        {% endfor %}
-      </div>
+                <!-- Navigation arrows -->
+                <div class="carousel-arrows">
+                  <label for="slide1-{{ product.id }}" class="prev">&#10094;</label>
+                  <label for="slide{{ product.images.all|length }}-{{ product.id }}" class="next">&#10095;</label>
+                </div>
+            </div>
+        </div>
+        <div class="article-info">
+          <a href="{% url 'webshop:product_detail' category.slug subcategory.slug product.slug %}">
+            <h2>{{ product.name }}</h2>
+          </a>
+        <p class="price">€{{ product.price }}</p>   
+        </div>
     </div>
-  </div>
-
-  <div class="product-info">
-    <h2>{{ product.name }}</h2>
-    <p class="price">€{{ product.price }}</p>
-  </div>
+    {% endfor %}
 </div>
 {% endblock %}

@@ -15,5 +15,6 @@ urlpatterns = [
     path('delivery/', views.delivery_view, name='delivery'),
     path('personal_data/', views.personal_data_view, name='personal_data'),
     path('orders/', views.orders_view, name='orders'),
-     path('<slug:category_name>/<slug:subcategory_name>/', views.articles_display_view, name='articles_display'),
+    path('<slug:category_name>/<slug:subcategory_name>/', views.articles_display_view, name='articles_display'),
+    path('webshop/<slug:category_slug>/<slug:subcategory_slug>/<slug:product_slug>/', views.articles_details_view, name='product_detail'),
 ]
