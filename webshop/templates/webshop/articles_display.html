@@ -2,34 +2,39 @@
 
 {% load static %}
 
-{% block title %}Katalog{% endblock %}
+{% block title %}Katalog - Žene - Haljine{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'webshop/css/articles_display.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="filter-sort-bar">
-    <div>
-        <h4>FILTRIRANJE</h4>
-    </div>
-    
-    <div>
-        <h4>SORTIRANJE</h4>
-    </div>
-</div>
+<div class="product-container">
+  <div class="product-image-wrapper">
+    <div class="product-carousel">
+      {% for image in product.images.all %}
+        <input type="radio" name="carousel-{{ product.id }}" id="slide{{ forloop.counter }}-{{ product.id }}">
+      {% endfor %}
 
-<div class="product-list">
-    {% for product in products %}
-    <div class="product-item">
-        <div class="product-details">
-            <h5>{{ product.name }}</h5>
-            <p>{{ product.price }} Є</p>
-        </div>
-    </div>
-    {% empty %}
-    <p>No products found.</p>
-    {% endfor %}
-</div>
+      <div class="carousel-slides">
+        {% for image in product.images.all %}
+          <div class="carousel-slide">
+            <img src="{{ image.image.url }}" alt="{{ product.name }}">
+          </div>
+        {% endfor %}
+      </div>
 
+      <div class="carousel-controls">
+        {% for image in product.images.all %}
+          <label for="slide{{ forloop.counter }}-{{ product.id }}" class="control {% if forloop.first %}prev{% else %}next{% endif %}"></label>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="product-info">
+    <h2>{{ product.name }}</h2>
+    <p class="price">€{{ product.price }}</p>
+  </div>
+</div>
 {% endblock %}

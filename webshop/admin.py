@@ -12,41 +12,28 @@ class AccountAdmin(admin.ModelAdmin):
         
 admin.site.register(Account, AccountAdmin)
 
-
-# Registracija modela za kategorije
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
-    prepopulated_fields = {'slug': ('name',)}  # Automatski generiraj slug na temelju imena
+    prepopulated_fields = {'slug': ('name',)}  
 
-# Registracija modela za podkategorije
 @admin.register(SubCategory)
 class SubCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'category')
 
-# Registracija modela za proizvode
-@admin.register(Product)
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+
+class ProductColorSizeInline(admin.TabularInline):
+    model = ProductColorSize
+    extra = 1
+
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'price')
-    list_filter = ('category', 'available_colors', 'available_sizes')
-    search_fields = ('name', 'category__name')
-    
-# Registracija modela za slike proizvoda
-@admin.register(ProductImage)
-class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ('product', 'image')
+    list_display = ('name', 'price', 'category', 'subcategory')
+    search_fields = ('name', 'category__name', 'subcategory__name')
+    inlines = [ProductImageInline, ProductColorSizeInline]  # Spoji inline obrasce
 
-# Registracija modela za boje
-@admin.register(Color)
-class ColorAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-
-# Registracija modela za veličine
-@admin.register(Size)
-class SizeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'is_available')
-
-# Registracija modela za kombinacije boja i veličina proizvoda
-@admin.register(ProductColorSize)
-class ProductColorSizeAdmin(admin.ModelAdmin):
-    list_display = ('product', 'color', 'size')
+admin.site.register(Product, ProductAdmin)
+admin.site.register(Color)
+admin.site.register(Size)

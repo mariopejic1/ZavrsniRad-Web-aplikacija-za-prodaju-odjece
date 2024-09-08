@@ -118,14 +118,15 @@ def delivery_view(request):
     return render(request, 'webshop/delivery.html') 
 
 def articles_display_view(request, category_name, subcategory_name):
-    # Retrieve the category
     category = get_object_or_404(Category, slug=category_name)
-
     subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
     
+    products = Product.objects.filter(subcategory=subcategory)
+
     context = {
         'category_name': category_name,
         'subcategory_name': subcategory_name,
+        'products': products
     }
     
     return render(request, 'webshop/articles_display.html', context)
