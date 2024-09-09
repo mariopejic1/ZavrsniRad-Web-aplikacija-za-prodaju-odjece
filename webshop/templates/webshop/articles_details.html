@@ -7,5 +7,69 @@
 {% endblock %}
 
 {% block content %}
+<div class = "sticky-container">
+    <div class="product-details-container">
+        <div class="product-images">
+            <a href="#image1">
+                <img src="{{ selected_variation.main_image.url }}" alt="{{ selected_variation.color.name }}" class="product-image">
+            </a>
+        
+            {% for image in variation_images %}
+                <a href="#image{{ forloop.counter }}">
+                    <img src="{{ image.image.url }}" alt="{{ selected_variation.color.name }}" class="product-image">
+                </a>
+            {% endfor %}
+        </div>
+        
+        <div id="image1" class="modal">
+            <div class="modal-content">
+                <img src="{{ selected_variation.main_image.url }}" alt="{{ selected_variation.color.name }}">
+                <a href="#" class="modal-close">&times;</a>
+            </div>
+        </div>
+        
+        {% for image in variation_images %}
+            <div id="image{{ forloop.counter }}" class="modal">
+                <div class="modal-content">
+                    <img src="{{ image.image.url }}" alt="{{ selected_variation.color.name }}">
+                    <a href="#" class="modal-close">&times;</a>
+                </div>
+            </div>
+        {% endfor %}
 
+        <div class="product-info">
+            <div class="info-box">
+                <div class = "name-price">
+                    <h3>{{ product.name }}</h3>
+                    <p class="price">€ {{ product.price }}</p>
+                </div>
+                
+                <div class="color-options">
+                    <h3>DOSTUPNE BOJE</h3>
+                    {% for variation in product.variations.all %}
+                        <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug %}?color={{ variation.color.name }}">{{ variation.color.name }}</a>
+                    {% endfor %}
+                </div>
+                <div class="size-options">
+                    <h3>DOSTUPNE VELIČINE</h3>
+                    {% for size in product.variations.first.sizes.all %}
+                        <p>{{ size.name }}</p>
+                    {% endfor %}
+                </div>
+                <div class="product-description">
+                    <h3>OPIS</h3>
+                    <p>- {{ product.description }}</p>
+                </div>
+                <div class="product-origin">
+                    <h3>PODRIJETLO</h3>
+                    <p>- {{ product.origin }}</p>
+                </div>
+                <div class="care-instructions">
+                    <h3>UPUTE ZA NJEGU</h3>
+                    <p>- {{ product.care_instructions }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

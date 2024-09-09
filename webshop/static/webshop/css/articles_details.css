@@ -1,0 +1,131 @@
+.sticky-container {
+    position: sticky;
+    top: 0; 
+    z-index: 500; 
+}
+
+.product-details-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.product-images {
+    display: flex;
+    flex-wrap: wrap; 
+    width: 70%; 
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.product-images a {
+    display: block;
+    width: 50%;
+    height: 550px; 
+}
+
+.product-images img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: fill; 
+    cursor: pointer;
+}
+
+.product-images img:hover { 
+    opacity: 0.8; 
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    margin: 15% auto;
+    padding: 20px;
+    width: 80%;
+    background: white;
+    text-align: center;
+    position: relative;
+}
+
+.modal-content img {
+    width: 100%;
+    height: auto;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+:target {
+    display: block;
+}
+
+.modal:target {
+    display: block;
+}
+
+.modal-content {
+    background: white;
+    position: relative;
+}
+
+.modal-content:target {
+    display: block;
+}
+
+.product-info{
+    display: flex;
+    flex-direction: column;
+    margin: 50px;
+    width: 30%;
+}
+
+.info-box{
+    border: 1px solid black;
+}
+
+.product-info div{
+    margin: 20px;
+}
+
+.product-info h3{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-info p{
+    font-size: 14px;
+}
+
+.product-info a{
+    color: black;
+    text-decoration: none;
+}
+
+.product-info a:hover{
+    text-decoration: underline;
+    text-decoration-color: black;
+}
+
