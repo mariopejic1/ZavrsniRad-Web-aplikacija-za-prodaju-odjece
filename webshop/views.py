@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .models import Account, Product, Category, SubCategory
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator
+
 
 def home_view(request):
     return render(request, 'webshop/home.html')    
@@ -118,10 +118,13 @@ def delivery_view(request):
     return render(request, 'webshop/delivery.html') 
 
 def articles_display_view(request, category_name, subcategory_name):
+    # Fetch category and subcategory based on the slugs
     category = get_object_or_404(Category, slug=category_name)
     subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
     
-    products = Product.objects.filter(subcategory=subcategory)
+    products = Product.objects.filter(subcategory=subcategory).prefetch_related(
+        'variations__images'  
+    )
 
     context = {
         'category_name': category_name,
@@ -131,23 +134,41 @@ def articles_display_view(request, category_name, subcategory_name):
     
     return render(request, 'webshop/articles_display.html', context)
 
-def sort_articles(request):
+def sort_articles(request, category_name, subcategory_name):
     sort_option = request.GET.get('sort', 'price_asc')
     
-    if sort_option == 'newest':
-        products = Product.objects.all().order_by('-created_at')
-    elif sort_option == 'oldest':
-        products = Product.objects.all().order_by('created_at')
-    elif sort_option == 'price_asc':
-        products = Product.objects.all().order_by('price')
-    elif sort_option == 'price_desc':
-        products = Product.objects.all().order_by('-price')
-    else:
-        products = Product.objects.all() 
+    category = get_object_or_404(Category, slug=category_name)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
     
-    return render(request, 'webshop/articles_display.html', {'products': products})
+    products = Product.objects.filter(subcategory=subcategory)
+    
+    if sort_option == 'newest':
+        products = products.order_by('-created_at')
+    elif sort_option == 'oldest':
+        products = products.order_by('created_at')
+    elif sort_option == 'price_asc':
+        products = products.order_by('price')
+    elif sort_option == 'price_desc':
+        products = products.order_by('-price')
+    
+    return render(request, 'webshop/articles_display.html', {
+        'category_name': category_name,
+        'subcategory_name': subcategory_name,
+        'products': products
+    })
 
-def articles_details_view(request, product_slug):
-   
-    product = get_object_or_404(Product, slug=product_slug)
-    return render(request, 'webshop/articles_details.html', {'product': product})
+def articles_details_view(request, category_name, subcategory_name, product_slug):
+
+    category = get_object_or_404(Category, slug=category_name)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
+    product = get_object_or_404(Product, slug=product_slug, subcategory=subcategory)
+    
+    variations = product.variations.all()
+    context = {
+        'category_name': category_name,
+        'subcategory_name': subcategory_name,
+        'product': product,
+        'variations': variations
+    }
+    
+    return render(request, 'webshop/articles_details.html', context)

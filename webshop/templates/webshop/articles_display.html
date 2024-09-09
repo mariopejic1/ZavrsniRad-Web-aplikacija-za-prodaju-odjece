@@ -17,7 +17,7 @@
     <div class = "sorting">
       <h4>SORTIRANJE: </h4>
     
-      <form method="GET" action="{% url 'webshop:sort_articles' %}">
+      <form method="GET" action="{% url 'webshop:sort_articles' category_name subcategory_name %}">
         <select name="sort" onchange="this.form.submit()">
           <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Najnoviji</option>
           <option value="oldest" {% if request.GET.sort == 'oldest' %}selected{% endif %}>Najstariji</option>
@@ -31,37 +31,23 @@
 
 
 <div class="articles-container">
-    {% for product in products %}
-    <div class="article">
+  {% for product in products %}
+    {% for variation in product.variations.all %}
+      <div class="article">
         <div class="article-image-wrapper">
-          <div class="carousel">
-            {% for image in product.images.all %}
-            <input type="radio" name="carousel-{{ product.id }}" id="slide{{ forloop.counter }}-{{ product.id }}" {% if forloop.first %}checked{% endif %}>
-            {% endfor %}
-
-            <!-- Carousel images -->
-            <div class="carousel-images">
-                {% for image in product.images.all %}
-                <div class="carousel-slide">
-                    <img src="{{ image.image.url }}" alt="{{ product.name }}">
-                </div>
-                {% endfor %}
-            </div>
-
-            <!-- Navigation arrows -->
-            <div class="carousel-arrows">
-                <label for="slide{{ previous_slide_number }}-{{ product.id }}" class="prev">&#10094;</label>
-                <label for="slide{{ next_slide_number }}-{{ product.id }}" class="next">&#10095;</label>
-            </div>
-          </div>
+            <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug %}">
+                <img src="{{ variation.main_image.url }}" alt="{{ product.name }}" class="main-image">
+            </a>
         </div>
         <div class="article-info">
-          <a href="{% url 'webshop:articles_details' product.slug %}">
-            <h2>{{ product.name }}</h2>
+          <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug %}">
+            <h2>{{ product.name }} - {{ variation.color.name }}</h2>
           </a>
-        <p class="price">€{{ product.price }}</p>   
+          <p class="price">€ {{ variation.price }}</p>
         </div>
-    </div>
+      </div>
     {% endfor %}
+  {% endfor %}
 </div>
+
 {% endblock %}

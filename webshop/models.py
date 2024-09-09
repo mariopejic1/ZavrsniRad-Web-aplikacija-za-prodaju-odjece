@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.utils import timezone
+import uuid
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -18,7 +19,7 @@ class Account(models.Model):
     
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True, null=True)  
+    slug = models.SlugField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -30,7 +31,7 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=False, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     
     def save(self, *args, **kwargs):
@@ -48,7 +49,6 @@ class Color(models.Model):
 
 class Size(models.Model):
     name = models.CharField(max_length=50) 
-    is_available = models.BooleanField(default=True) 
 
     def __str__(self):
         return self.name
@@ -57,16 +57,15 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=False, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     details = models.TextField()
     composition = models.TextField()
     origin = models.CharField(max_length=255)
     care_instructions = models.TextField()
-    available_colors = models.ManyToManyField(Color, through='ProductColorSize')
-    available_sizes = models.ManyToManyField(Size, through='ProductColorSize')
     created_at = models.DateTimeField(default=timezone.now)
-    
+    reference_number = models.CharField(max_length=100, unique=False, default=uuid.uuid4, editable=False)  
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -74,22 +73,31 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+class ProductVariation(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variations')
+    main_image = models.ImageField(upload_to='products/', blank=True, null=True)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE)
+    sizes = models.ManyToManyField(Size, through='ProductVariationSize')
 
-class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='product_images/')
+    def __str__(self):
+        return f"{self.product.name} - {self.color.name}"
+    
+class ProductVariationImage(models.Model):
+    product_variation = models.ForeignKey(ProductVariation, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='product_variation_images/')
     
     def __str__(self):
-        return f"Image for {self.product.name}"
-
-class ProductColorSize(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='color_size_combinations')
-    color = models.ForeignKey(Color, on_delete=models.CASCADE)
+        return f"Image for {self.product_variation.product.name} - {self.product_variation.color.name} - Image"
+    
+class ProductVariationSize(models.Model):
+    product_variation = models.ForeignKey(ProductVariation, on_delete=models.CASCADE, related_name='variation_sizes')
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
+    is_available = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.product.name} - {self.color.name} - {self.size.name}"
-
+        return f"{self.product_variation.product.name} - {self.product_variation.color.name} - {self.size.name}"
+    
 class Order(models.Model):
     STATUS_CHOICES = (
         ('IP', 'U pripremi'),
