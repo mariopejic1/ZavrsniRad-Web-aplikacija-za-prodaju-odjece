@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.utils import timezone
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -30,15 +31,15 @@ class Category(models.Model):
 class SubCategory(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategories')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
-        
+
     def __str__(self):
-        return f"{self.name} - {self.category.name}"
+        return f"{self.name}"
 
 class Color(models.Model):
     name = models.CharField(max_length=100)
@@ -53,10 +54,10 @@ class Size(models.Model):
         return self.name
      
 class Product(models.Model):
-    category = models.ForeignKey('Category', on_delete=models.CASCADE)
-    subcategory = models.ForeignKey(SubCategory, related_name='products', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=False, blank= False)
+    slug = models.SlugField(unique=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     details = models.TextField()
     composition = models.TextField()
@@ -64,6 +65,7 @@ class Product(models.Model):
     care_instructions = models.TextField()
     available_colors = models.ManyToManyField(Color, through='ProductColorSize')
     available_sizes = models.ManyToManyField(Size, through='ProductColorSize')
+    created_at = models.DateTimeField(default=timezone.now)
     
     def save(self, *args, **kwargs):
         if not self.slug:

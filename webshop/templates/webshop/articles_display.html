@@ -9,34 +9,54 @@
 {% endblock %}
 
 {% block content %}
+<div class ="sticky-header2">
+  <div class="filter-sorting-container">
+    <div>
+      <h4>FILTRIRANJE</h4>
+    </div>
+    <div class = "sorting">
+      <h4>SORTIRANJE: </h4>
+    
+      <form method="GET" action="{% url 'webshop:sort_articles' %}">
+        <select name="sort" onchange="this.form.submit()">
+          <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Najnoviji</option>
+          <option value="oldest" {% if request.GET.sort == 'oldest' %}selected{% endif %}>Najstariji</option>
+          <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>Po cijeni - najniža</option>
+          <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>Po cijeni - najviša</option>
+        </select>
+    </form>
+    </div>
+  </div>
+</div>
+
+
 <div class="articles-container">
     {% for product in products %}
     <div class="article">
         <div class="article-image-wrapper">
-            <div class="carousel">
-                <!-- Radio buttons for slides -->
+          <div class="carousel">
+            {% for image in product.images.all %}
+            <input type="radio" name="carousel-{{ product.id }}" id="slide{{ forloop.counter }}-{{ product.id }}" {% if forloop.first %}checked{% endif %}>
+            {% endfor %}
+
+            <!-- Carousel images -->
+            <div class="carousel-images">
                 {% for image in product.images.all %}
-                <input type="radio" name="carousel-{{ product.id }}" id="slide{{ forloop.counter }}-{{ product.id }}" {% if forloop.first %}checked{% endif %}>
+                <div class="carousel-slide">
+                    <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                </div>
                 {% endfor %}
-
-                <!-- Carousel images -->
-                <div class="carousel-images">
-                    {% for image in product.images.all %}
-                    <div class="carousel-slide">
-                        <img src="{{ image.image.url }}" alt="{{ product.name }}">
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <!-- Navigation arrows -->
-                <div class="carousel-arrows">
-                  <label for="slide1-{{ product.id }}" class="prev">&#10094;</label>
-                  <label for="slide{{ product.images.all|length }}-{{ product.id }}" class="next">&#10095;</label>
-                </div>
             </div>
+
+            <!-- Navigation arrows -->
+            <div class="carousel-arrows">
+                <label for="slide{{ previous_slide_number }}-{{ product.id }}" class="prev">&#10094;</label>
+                <label for="slide{{ next_slide_number }}-{{ product.id }}" class="next">&#10095;</label>
+            </div>
+          </div>
         </div>
         <div class="article-info">
-          <a href="{% url 'webshop:product_detail' category.slug subcategory.slug product.slug %}">
+          <a href="{% url 'webshop:articles_details' product.slug %}">
             <h2>{{ product.name }}</h2>
           </a>
         <p class="price">€{{ product.price }}</p>   

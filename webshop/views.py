@@ -131,15 +131,23 @@ def articles_display_view(request, category_name, subcategory_name):
     
     return render(request, 'webshop/articles_display.html', context)
 
-def articles_details_view(request, category_name, subcategory_name, product_name):
-    category = get_object_or_404(Category, slug=category_name)
-    subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
-    product = get_object_or_404(Product, slug=product_name, category=category, subcategory=subcategory )
+def sort_articles(request):
+    sort_option = request.GET.get('sort', 'price_asc')
+    
+    if sort_option == 'newest':
+        products = Product.objects.all().order_by('-created_at')
+    elif sort_option == 'oldest':
+        products = Product.objects.all().order_by('created_at')
+    elif sort_option == 'price_asc':
+        products = Product.objects.all().order_by('price')
+    elif sort_option == 'price_desc':
+        products = Product.objects.all().order_by('-price')
+    else:
+        products = Product.objects.all() 
+    
+    return render(request, 'webshop/articles_display.html', {'products': products})
 
-    context = {
-        'category_name': category_name,
-        'subcategory_name': subcategory_name,
-        'product_name': product_name
-    }
-
-    return render(request, 'webshop/articles_details.html', context)
+def articles_details_view(request, product_slug):
+   
+    product = get_object_or_404(Product, slug=product_slug)
+    return render(request, 'webshop/articles_details.html', {'product': product})

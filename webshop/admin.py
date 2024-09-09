@@ -19,7 +19,11 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(SubCategory)
 class SubCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category')
+    list_display = ('get_name', 'category')
+
+    def get_name(self, obj):
+        return obj.name
+    get_name.short_description = 'SubCategory Name'
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -32,8 +36,13 @@ class ProductColorSizeInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'category', 'subcategory')
     search_fields = ('name', 'category__name', 'subcategory__name')
-    inlines = [ProductImageInline, ProductColorSizeInline]  # Spoji inline obrasce
+    inlines = [ProductImageInline, ProductColorSizeInline]  
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Color)
 admin.site.register(Size)
+
+def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "subcategory":
+            kwargs["queryset"] = SubCategory.objects.all()  
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
