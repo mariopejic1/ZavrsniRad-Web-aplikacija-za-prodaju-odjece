@@ -15,7 +15,7 @@
                 <div class="nav-left">
                     <ul>
                         <li class="dropdown">
-                            <a href="#">ŽENE</a>
+                            <a href="{% url 'webshop:female_homepage' %}">ŽENE</a>
                             <div class="dropdown-content">
                                 <a href="{% url 'webshop:articles_display' 'female' 'dresses' %}">Haljine</a>
                                 <a href="{% url 'webshop:articles_display' 'female' 'shirts' %}">Košulje</a>
@@ -25,7 +25,7 @@
                             </div>
                         </li>
                         <li class="dropdown">
-                            <a href="#">MUŠKARCI</a>
+                            <a href="{% url 'webshop:male_homepage' %}">MUŠKARCI</a>
                             <div class="dropdown-content">
                                 <a href="{% url 'webshop:articles_display' 'male' 'shirts' %}">Košulje</a>
                                 <a href="{% url 'webshop:articles_display' 'male' 't-shirts' %}">Majice</a>
@@ -44,9 +44,11 @@
                     <ul>
                         <li><a href="#">TRAŽI</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'webshop:profile' %}">PROFIL</a></li>
-                            <li><a href="#">KOŠARICA</a></li>
-                            <li><a href="{% url 'webshop:logout' %}">ODJAVA</a></li>
+                            {% if not user.is_superuser %}
+                                <li><a href="{% url 'webshop:profile' %}">PROFIL</a></li>
+                                <li><a href="{% url 'webshop:cart' %}">KOŠARICA</a></li>
+                                {% endif %}
+                                <li><a href="{% url 'webshop:logout' %}">ODJAVA</a></li>           
                         {% else %}
                             <li><a href="{% url 'webshop:login' %}">PRIJAVA</a></li>
                         {% endif %}

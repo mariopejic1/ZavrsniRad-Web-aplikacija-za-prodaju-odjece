@@ -48,14 +48,27 @@
                     <h3>Dostupno u bojama:</h3>
                     <div class="colors">
                         {% for variation in product.variations.all %}
-                        <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug %}?color={{ variation.color.name }}">{{ variation.color.name }}</a>
+                        <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug variation.color.name %}">
+                            {{ variation.color.name }}
+                        </a>
                         {% endfor %}
                     </div>
                 </div>
+
                 <div class="size-options">
-                    {% for size in product.variations.first.sizes.all %}
-                        <p>{{ size.name }}</p>
-                    {% endfor %}
+                    <form method="post" action="{% url 'webshop:add_to_cart' category_name subcategory_name product.slug selected_variation.color.name %}">
+                        {% csrf_token %}
+                        <select name="size" id="size">
+                            {% for size in available_sizes %}
+                                <option value="{{ size.size.id }}">{{ size.size.name }}</option>
+                            {% empty %}
+                                <option disabled>Nema dostupnih veličina</option>
+                            {% endfor %}
+                        </select>
+                        <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="product_variation_id" value="{{ selected_variation.id }}">
+                        <button type="submit">Dodaj u košaricu</button>
+                    </form>
                 </div>
                 
                 <div class="desc">
@@ -91,11 +104,11 @@
         </div>
     
         {% if user.is_authenticated %}
-        <form method="post" action="{% url 'webshop:articles_details' category_name subcategory_name product.slug %}">
-        {% csrf_token %}
-        <textarea name="text" rows="4" placeholder="Ostavite komentar..."></textarea>
-        <br>
-        <button type="submit">Pošalji komentar</button>
+        <form method="post" action="{% url 'webshop:articles_details' category_name subcategory_name product.slug selected_variation.color.name %}">
+            {% csrf_token %}
+            <textarea name="text" rows="4" placeholder="Ostavite komentar..."></textarea>
+            <br>
+            <button type="submit">Pošalji komentar</button>
         </form>
         {% endif %}
     </div>

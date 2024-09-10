@@ -24,7 +24,7 @@ from webshop import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("webshop/", include("webshop.urls")),
-    path('', views.home_view, name='home'),
+    path('', views.female_homepage_view, name='female_homepage'),
     
 ]
 

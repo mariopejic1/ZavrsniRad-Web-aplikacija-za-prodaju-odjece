@@ -30,33 +30,46 @@
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" value="{{ user_account.email }}">
         </div>
-        <div class="form-group">
-            <label for="home_address">Adresa:</label>
-            <input type="text" id="home_address" name="home_address" value="{{ user_account.home_address }}">
-        </div>
-        
 </div>       
 
-<div class = "bank-details-container">
+<div class="delivery-data-container">
+    <h2>Podaci za dostavu</h2>
+    <div class="form-group">
+        <label for="postal_number">Poštanski broj:</label>
+        <input type="text" id="postal_number" name="postal_number" value="{{ user_account.postal_number }}">
+    </div>
+    <div class="form-group">
+        <label for="city">Mjesto/Grad:</label>
+        <input type="text" id="city" name="city" value="{{ user_account.city }}">
+    </div>
+    <div class="form-group">
+        <label for="street">Ulica:</label>
+        <input type="text" id="street" name="street" value="{{ user_account.street }}">
+    </div>
+    <div class="form-group">
+        <label for="house_number">Kućni broj:</label>
+        <input type="text" id="house_number" name="house_number" value="{{ user_account.house_number }}">
+    </div>
+</div>
+
+<div class="bank-details-container">
     <h2>Bankovni podaci</h2>
     <div class="info-container">
         <p>
             Unesite ili uredite svoje bankovne podatke kako biste mogli primiti povrat za narudžbe plaćene pouzećem.
         </p>
     </div>
-    <form action="" method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="iban">IBAN:</label>
-            <input type="text" id="iban" name="iban" value="{{ user_account.iban }}">
-        </div>
-        <div class="form-group">
-            <label for="bank">Banka:</label>
-            <input type="text" id="bank" name="bank" value="{{ user_account.bank }}">
-        </div>
-        <div class="button-container">
-            <button type="submit">Spremi promjene</button>
-        </div>
-    </form>
+    <div class="form-group">
+        <label for="iban">IBAN:</label>
+        <input type="text" id="iban" name="iban" value="{{ user_account.iban }}">
+    </div>
+    <div class="form-group">
+        <label for="bank">Banka:</label>
+        <input type="text" id="bank" name="bank" value="{{ user_account.bank }}">
+    </div>
+    <div class="button-container">
+        <button type="submit">Spremi promjene</button>
+    </div>
+</form>
 </div>
 {% endblock %}

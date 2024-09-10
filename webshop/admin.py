@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Account, Category, SubCategory, Color, Size, Product, ProductVariationImage,
-    ProductVariation, ProductVariationSize, Comment
+    ProductVariation, ProductVariationSize, Comment, CartItem
 )
 
 class ProductVariationImageInline(admin.TabularInline):
@@ -56,3 +56,8 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('poster', 'product', 'text', 'created_at')  
     
 admin.site.register(Comment, CommentAdmin)
+
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = ('id', 'cart', 'product', 'quantity')  
+    list_filter = ('cart', 'product')  

@@ -4,7 +4,7 @@ from . import views
 app_name = "webshop"
 
 urlpatterns = [
-    path('', views.home_view, name='home'),
+    path('', views.female_homepage_view, name='female_homepage'),
     path('base/', views.base_view, name='base'),
     path('login/', views.login_view, name='login'),
     path('profile/', views.profile_view, name='profile'), 
@@ -15,7 +15,12 @@ urlpatterns = [
     path('delivery/', views.delivery_view, name='delivery'),
     path('personal_data/', views.personal_data_view, name='personal_data'),
     path('orders/', views.orders_view, name='orders'),
+    path('female_homepage/', views.female_homepage_view, name='female_homepage'),
+    path('male_homepage/', views.male_homepage_view, name='male_homepage'),
     path('<slug:category_name>/<slug:subcategory_name>/', views.articles_display_view, name='articles_display'),
     path('<slug:category_name>/<slug:subcategory_name>/sort_articles/', views.sort_articles, name='sort_articles'),
-    path('<slug:category_name>/<slug:subcategory_name>/<slug:product_slug>/', views.articles_details_view, name='articles_details'),
+    path('<slug:category_name>/<slug:subcategory_name>/<slug:product_slug>/<slug:color>/', views.articles_details_view, name='articles_details'),    path('cart/', views.cart_view, name='cart'),
+    path('cart/update/<int:item_id>/', views.update_cart_item, name='update_cart_item'),
+    path('cart/remove/<int:item_id>/', views.remove_cart_item, name='remove_cart_item'),
+    path('<slug:category_name>/<slug:subcategory_name>/<slug:product_slug>/<slug:color>/add-to-cart/', views.add_to_cart, name='add_to_cart'),
 ]

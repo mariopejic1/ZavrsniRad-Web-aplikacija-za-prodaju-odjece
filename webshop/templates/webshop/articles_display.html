@@ -9,12 +9,12 @@
 {% endblock %}
 
 {% block content %}
-<div class ="sticky-header2">
+<div class="sticky-header2">
   <div class="filter-sorting-container">
     <div>
       <h4>FILTRIRANJE</h4>
     </div>
-    <div class = "sorting">
+    <div class="sorting">
       <h4>SORTIRANJE: </h4>
     
       <form method="GET" action="{% url 'webshop:sort_articles' category_name subcategory_name %}">
@@ -29,18 +29,17 @@
   </div>
 </div>
 
-
 <div class="articles-container">
   {% for product in products %}
     {% for variation in product.variations.all %}
       <div class="article">
         <div class="article-image-wrapper">
-            <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug %}">
+            <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug variation.color.name %}">
                 <img src="{{ variation.main_image.url }}" alt="{{ product.name }}" class="main-image">
             </a>
         </div>
         <div class="article-info">
-          <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug %}">
+          <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug variation.color.name %}">
             <h2>{{ product.name }} - {{ variation.color.name }}</h2>
           </a>
           <p class="price">€ {{ product.price }}</p>

@@ -21,6 +21,10 @@ h1::after {
     left: 0;
     bottom: 0; 
 }
+.returns-container h3{
+    font-size: 24px;
+    margin-top: 15px;
+}
 
 .returns-container p, .returns-container ul {
     line-height: 1.6; 
