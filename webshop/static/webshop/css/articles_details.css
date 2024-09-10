@@ -1,12 +1,8 @@
-.sticky-container {
-    position: sticky;
-    top: 0; 
-    z-index: 500; 
-}
-
 .product-details-container {
     display: flex;
     flex-direction: row;
+    border-bottom: 1px solid black;
+    padding: 2px 0 0 0;
 }
 
 .product-images {
@@ -15,12 +11,13 @@
     width: 70%; 
     margin-bottom: 20px;
     position: relative;
+    gap: 2px;
 }
 
 .product-images a {
     display: block;
-    width: 50%;
-    height: 550px; 
+    width: calc(50% - 2px);
+    height: 550px;
 }
 
 .product-images img {
@@ -98,34 +95,135 @@
 .product-info{
     display: flex;
     flex-direction: column;
-    margin: 50px;
-    width: 30%;
+    margin: 60px 50px 30px 60px;
+    width: calc(30% + 2px);
 }
 
-.info-box{
-    border: 1px solid black;
+.name-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-.product-info div{
-    margin: 20px;
-}
-
-.product-info h3{
-    font-size: 18px;
+.name-price h3{
+    font-size: 25px;
     font-weight: bold;
 }
 
-.product-info p{
+.name-price p{
+    font-size: 25px;
+}
+
+.color-options{
+    margin-bottom: 25px;
+}
+
+.colors{
+    display: flex;
+    flex-direction: wrap;
+    align-items: center;
+}
+
+.colors a{
+    margin-right: 10px;
+}
+
+.color-options h3{
     font-size: 14px;
 }
 
-.product-info a{
+.color-options a{
     color: black;
     text-decoration: none;
 }
 
-.product-info a:hover{
+.color-options a:hover{
     text-decoration: underline;
     text-decoration-color: black;
 }
 
+.size-options{
+    border-bottom: 1px solid darkgray;
+    border-top: 1px solid darkgray;
+    margin-bottom: 20px;
+}
+
+.size-options p{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.desc {
+    margin-top: 60px;
+    border: 0.5px solid black;
+}
+
+.desc h3{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 20px 10px 20px;
+}
+
+.desc p{
+    font-size: 14px;
+    margin: 20px;
+}
+
+.comments {
+    margin: 20px;
+}
+
+.comments h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.comments-list {
+    max-width: 800px;
+    margin-bottom: 20px;
+}
+
+.comment {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.comment p {
+    margin: 0;
+    font-size: 14px; 
+}
+
+.comment small {
+    color: #555;
+    display: block;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+form {
+    max-width: 800px;
+}
+
+textarea {
+    width: 100%;
+    height: 40px; 
+    padding: 8px;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 8px 12px; 
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: gray;
+}

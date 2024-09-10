@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<div class = "sticky-container">
+
     <div class="product-details-container">
         <div class="product-images">
             <a href="#image1">
@@ -45,31 +45,61 @@
                 </div>
                 
                 <div class="color-options">
-                    <h3>DOSTUPNE BOJE</h3>
-                    {% for variation in product.variations.all %}
+                    <h3>Dostupno u bojama:</h3>
+                    <div class="colors">
+                        {% for variation in product.variations.all %}
                         <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug %}?color={{ variation.color.name }}">{{ variation.color.name }}</a>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="size-options">
-                    <h3>DOSTUPNE VELIČINE</h3>
                     {% for size in product.variations.first.sizes.all %}
                         <p>{{ size.name }}</p>
                     {% endfor %}
                 </div>
-                <div class="product-description">
-                    <h3>OPIS</h3>
-                    <p>- {{ product.description }}</p>
+                
+                <div class="desc">
+                    <div>
+                        <h3>OPIS</h3>
+                        <p>-{{ product.description }}</p>
+                    </div>
+
+                    <div>
+                        <h3>PODRIJETLO</h3>
+                        <p>- {{ product.origin }}</p>
+                    </div>
+
+                    <div></div>
+                        <h3>ODRŽAVANJE</h3>
+                        <p>- {{ product.care_instructions }}</p>
+                    </div>
                 </div>
-                <div class="product-origin">
-                    <h3>PODRIJETLO</h3>
-                    <p>- {{ product.origin }}</p>
-                </div>
-                <div class="care-instructions">
-                    <h3>UPUTE ZA NJEGU</h3>
-                    <p>- {{ product.care_instructions }}</p>
-                </div>
+                
             </div>
         </div>
     </div>
+
+    <div class="comments">
+        <h2>KOMENTARI</h2>
+        <div class="comments-list">
+            {% for comment in selected_variation.comments.all %}
+                <div class="comment">
+                    <p>{{ comment.text }}</p>
+                    <small>{{ comment.poster.name }}, {{ comment.created_at|date:"d.m.Y" }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'webshop:articles_details' category_name subcategory_name product.slug %}">
+        {% csrf_token %}
+        <textarea name="text" rows="4" placeholder="Ostavite komentar..."></textarea>
+        <br>
+        <button type="submit">Pošalji komentar</button>
+        </form>
+        {% endif %}
+    </div>
+    
 </div>
+
 {% endblock %}

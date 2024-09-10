@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import Account, Product, Category, SubCategory, ProductVariation
+from .models import Account, Product, Category, SubCategory, ProductVariation, Comment
 from django.contrib.auth.models import User
-from django.http import Http404
-
+from django.utils import timezone
 
 def home_view(request):
     return render(request, 'webshop/home.html')    
@@ -119,7 +118,6 @@ def delivery_view(request):
     return render(request, 'webshop/delivery.html') 
 
 def articles_display_view(request, category_name, subcategory_name):
-    # Fetch category and subcategory based on the slugs
     category = get_object_or_404(Category, slug=category_name)
     subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
     
@@ -162,18 +160,30 @@ def articles_details_view(request, category_name, subcategory_name, product_slug
     category = get_object_or_404(Category, slug=category_name)
     subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
     product = get_object_or_404(Product, slug=product_slug, subcategory=subcategory)
-    
+
     color_name = request.GET.get('color', None)
-    
+
     if color_name:
         try:
             selected_variation = product.variations.get(color__name=color_name)
         except ProductVariation.DoesNotExist:
-            selected_variation = product.variations.first() 
+            selected_variation = product.variations.first()
     else:
         selected_variation = product.variations.first()
     
     variation_images = selected_variation.images.all()
+
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        if text:
+            account = get_object_or_404(Account, user=request.user) 
+            Comment.objects.create(
+                product=selected_variation,
+                poster=account,
+                text=text,
+                created_at=timezone.now()
+            )
+            return redirect('webshop:articles_details', category_name=category_name, subcategory_name=subcategory_name, product_slug=product_slug)
 
     context = {
         'category_name': category_name,
@@ -185,4 +195,6 @@ def articles_details_view(request, category_name, subcategory_name, product_slug
     }
 
     return render(request, 'webshop/articles_details.html', context)
+
+
 
