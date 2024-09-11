@@ -11,9 +11,43 @@
 {% block content %}
 <div class="sticky-header2">
   <div class="filter-sorting-container">
-    <div>
+    <div class="filter-dropdown">
       <h4>FILTRIRANJE</h4>
-    </div>
+      <div class="filter-dropdown-content">
+          <form method="GET" action="{% url 'webshop:articles_display' category_name subcategory_name %}">
+            <div class="filter-section">
+              <h4>Boje</h4>
+              <ul>
+                  {% for color in colors %}
+                      <li>
+                          <label>
+                              <input type="checkbox" name="color" value="{{ color.id }}" {% if color.id|stringformat:"s" in selected_colors %}checked{% endif %}>
+                              {{ color.name }}
+                          </label>
+                      </li>
+                  {% endfor %}
+              </ul>
+            </div>
+              
+              <div class="filter-section">
+                  <h4>Velicine</h4>
+                  <ul>
+                      {% for size in sizes %}
+                          <li>
+                              <label>
+                                  <input type="checkbox" name="size" value="{{ size.id }}" {% if size.id|stringformat:"s" in selected_sizes %}checked{% endif %}>
+                                  {{ size.name }}
+                              </label>
+                          </li>
+                      {% endfor %}
+                  </ul>
+              </div>
+              
+              <button type="submit">Primijeni</button>
+          </form>
+      </div>
+  </div>
+
     <div class="sorting">
       <h4>SORTIRANJE: </h4>
     
@@ -30,23 +64,23 @@
 </div>
 
 <div class="articles-container">
-  {% for product in products %}
-    {% for variation in product.variations.all %}
+  {% if filtered_product_variations.exists %}
+    {% for variation in filtered_product_variations %}
       <div class="article">
         <div class="article-image-wrapper">
-            <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug variation.color.name %}">
-                <img src="{{ variation.main_image.url }}" alt="{{ product.name }}" class="main-image">
+            <a href="{% url 'webshop:articles_details' category_name subcategory_name variation.product.slug variation.color.name %}">
+                <img src="{{ variation.main_image.url }}" alt="{{ variation.product.name }}" class="main-image">
             </a>
         </div>
         <div class="article-info">
-          <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug variation.color.name %}">
-            <h2>{{ product.name }} - {{ variation.color.name }}</h2>
+          <a href="{% url 'webshop:articles_details' category_name subcategory_name variation.product.slug variation.color.name %}">
+            <h2>{{ variation.product.name }} - {{ variation.color.name }}</h2>
           </a>
-          <p class="price">€ {{ product.price }}</p>
+          <p class="price">€ {{ variation.product.price }}</p>
         </div>
       </div>
     {% endfor %}
-  {% endfor %}
+  {% endif %}
 </div>
 
 {% endblock %}

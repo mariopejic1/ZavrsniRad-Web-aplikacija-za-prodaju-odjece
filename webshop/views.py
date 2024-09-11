@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import Account, Product, Category, SubCategory, ProductVariation, Comment, Cart, CartItem, Order, Size, ProductVariationSize
+from .models import Account, Product, Category, SubCategory, ProductVariation, Comment, Cart, CartItem, Order, Size, ProductVariationSize, Color
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save
@@ -128,19 +128,42 @@ def delivery_view(request):
     return render(request, 'webshop/delivery.html') 
 
 def articles_display_view(request, category_name, subcategory_name):
+    colors = Color.objects.all()
+    sizes = Size.objects.all()
+
     category = get_object_or_404(Category, slug=category_name)
     subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
-    
-    products = Product.objects.filter(subcategory=subcategory).prefetch_related(
-        'variations__images'  
-    )
+
+    selected_colors = request.GET.getlist('color')
+    selected_sizes = request.GET.getlist('size')
+
+    products = Product.objects.filter(subcategory=subcategory)
+
+    product_variations = ProductVariation.objects.filter(product__in=products)
+
+    if selected_colors:
+        product_variations = product_variations.filter(color__id__in=selected_colors)
+
+    if selected_sizes:
+        product_variation_sizes = ProductVariationSize.objects.filter(
+            size__id__in=selected_sizes,
+            is_available=True
+        ).values_list('product_variation_id', flat=True)
+        product_variations = product_variations.filter(id__in=product_variation_sizes)
+
+    filtered_products = Product.objects.filter(variations__in=product_variations).distinct()
 
     context = {
         'category_name': category_name,
         'subcategory_name': subcategory_name,
-        'products': products
+        'products': filtered_products if selected_colors or selected_sizes else products,  
+        'filtered_product_variations': product_variations.distinct(),
+        'colors': colors,
+        'sizes': sizes,
+        'selected_colors': selected_colors,
+        'selected_sizes': selected_sizes,
     }
-    
+
     return render(request, 'webshop/articles_display.html', context)
 
 def sort_articles(request, category_name, subcategory_name):
@@ -165,6 +188,7 @@ def sort_articles(request, category_name, subcategory_name):
         'subcategory_name': subcategory_name,
         'products': products
     })
+
 
 def articles_details_view(request, category_name, subcategory_name, product_slug, color):
     category = get_object_or_404(Category, slug=category_name)

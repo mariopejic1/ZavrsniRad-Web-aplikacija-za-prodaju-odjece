@@ -95,7 +95,6 @@ nav {
     left: 0;
     background-color: black;
     min-width: 200px;
-    z-index: 1;
     right: 0;
     min-width: 20vw;
     box-sizing: border-box;
