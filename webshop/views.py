@@ -208,10 +208,18 @@ def articles_details_view(request, category_name, subcategory_name, product_slug
 
 
 def cart_view(request):
-    cart = get_object_or_404(Cart, user=request.user.account)
-    cart_items = cart.items.all() 
-    subtotal = sum(item.quantity * item.product.product.price for item in cart_items)
+    cart, created = Cart.objects.get_or_create(user=request.user.account)
+    cart_items = cart.items_in_cart.all()  
+    
+
+    subtotal = 0
+    for item in cart_items:
+        product_price = item.product.product.price  
+        item_total = item.quantity * product_price  
+        subtotal += item_total  
+    
     delivery_cost = 0 if subtotal >= 50 else 5
+    
     total_price = subtotal + delivery_cost
     
     context = {
@@ -244,24 +252,18 @@ def add_to_cart(request, category_name, subcategory_name, product_slug, color=No
         quantity = int(request.POST.get('quantity', 1))
         product_variation_id = request.POST.get('product_variation_id')
 
-        # Get the ProductVariation instance
         product_variation = get_object_or_404(ProductVariation, id=product_variation_id)
-
-        # Get or create the user's cart
         cart, created = Cart.objects.get_or_create(user=request.user.account)
 
-        # Get or create a CartItem for the given product variation
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
             product=product_variation,  
             defaults={'quantity': quantity}
         )
 
-        # If the cart item already exists, increase the quantity
         if not created:
             cart_item.quantity += quantity
             cart_item.save()
 
-        # Redirect back to the product details page
         return redirect('webshop:articles_details', category_name=category_name, subcategory_name=subcategory_name, product_slug=product_slug, color=color)
 

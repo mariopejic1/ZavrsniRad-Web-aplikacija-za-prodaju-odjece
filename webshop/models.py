@@ -103,7 +103,6 @@ class ProductVariationSize(models.Model):
     
 class Cart(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=0)
     items = models.ManyToManyField('CartItem', related_name='cart_items', blank=True)  
     
     def __str__(self):
@@ -111,14 +110,18 @@ class Cart(models.Model):
     
     def total_quantity(self):
         return sum(item.quantity for item in self.items.all())
+    
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items_in_cart', on_delete=models.CASCADE)  
-    product = models.ForeignKey(ProductVariation, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductVariation, on_delete=models.CASCADE)  
     quantity = models.PositiveIntegerField(default=1)
     
     def __str__(self):
         return f"{self.quantity} x {self.product.product.name} in cart of {self.cart.user.name}"
+    
+    def total_price(self):
+        return self.quantity * self.product.product.price
     
     
 class Order(models.Model):

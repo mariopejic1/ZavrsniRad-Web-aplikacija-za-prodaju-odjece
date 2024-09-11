@@ -13,16 +13,14 @@
     <h1>Košarica</h1>
     
     <div class="cart-items">
-        {% if cart.items_in_cart.all %}
-        <ul>
-            {% for item in cart.items_in_cart.all %}
-            <li>
-                {{ item.product.product.name }} - {{ item.quantity }}
-            </li>
-        {% endfor %}
-        </ul>
+        {% if cart.items_in_cart.count %}
+            <ul>
+                {% for item in cart.items_in_cart.all %}
+                    <li>{{ item.product.product.name }} - {{ item.quantity }}</li>
+                {% endfor %}
+            </ul>
         {% else %}
-        <p>Your cart is empty.</p>
+            <p>Your cart is empty.</p>
         {% endif %}
     </div>
 
