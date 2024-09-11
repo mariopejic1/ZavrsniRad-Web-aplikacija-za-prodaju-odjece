@@ -30,7 +30,7 @@
     box-sizing: border-box;
 }
 
-button {
+.login-container button {
     width: 100%;
     padding: 10px;
     background-color: black;

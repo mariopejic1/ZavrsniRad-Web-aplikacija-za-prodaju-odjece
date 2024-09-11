@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db.models import Q, Exists, OuterRef
 
 def home_view(request):
     return render(request, 'webshop/home.html')    
@@ -290,4 +291,65 @@ def add_to_cart(request, category_name, subcategory_name, product_slug, color=No
             cart_item.save()
 
         return redirect('webshop:articles_details', category_name=category_name, subcategory_name=subcategory_name, product_slug=product_slug, color=color)
+    
+def search_view(request):
+    query = request.GET.get('query', '')
+    selected_colors = request.GET.getlist('color')
+    selected_sizes = request.GET.getlist('size')
+    selected_category = request.GET.get('category', '')
+    selected_subcategory = request.GET.get('subcategory', '')
+    sort = request.GET.get('sort', '')
+
+    colors = Color.objects.all()
+    sizes = Size.objects.all()
+    categories = Category.objects.all()
+    subcategories = SubCategory.objects.all()
+    product_variations = ProductVariation.objects.all()
+
+    if query:
+        keywords = query.split()
+        q_objects = Q()
+        for keyword in keywords:
+            q_objects &= (
+                Q(product__name__icontains=keyword) |
+                Q(product__category__name__icontains=keyword) |
+                Q(product__subcategory__name__icontains=keyword) |
+                Q(color__name__icontains=keyword)
+            )
+        product_variations = product_variations.filter(q_objects).distinct()
+
+
+    if selected_sizes and all(size.isdigit() for size in selected_sizes):
+        product_variations = product_variations.filter(variation_sizes__size__id__in=selected_sizes, variation_sizes__is_available=True).distinct()
+
+    context = {
+        'filtered_product_variations': product_variations,
+        'colors': colors,
+        'sizes': sizes,
+        'categories': categories,
+        'subcategories': subcategories,
+        'selected_colors': selected_colors,
+        'selected_sizes': selected_sizes,
+        'selected_category': selected_category,
+        'selected_subcategory': selected_subcategory,
+        'query': query,
+        'sort': sort,
+    }
+
+    return render(request, 'webshop/search.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

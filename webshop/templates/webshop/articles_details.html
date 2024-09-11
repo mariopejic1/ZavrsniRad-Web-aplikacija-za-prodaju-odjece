@@ -58,6 +58,7 @@
                 <div class="size-options">
                     <form method="post" action="{% url 'webshop:add_to_cart' category_name subcategory_name product.slug selected_variation.color.name %}">
                         {% csrf_token %}
+                        <h5>Odaberi veličinu:</h5>
                         <select name="size" id="size">
                             {% for size in available_sizes %}
                                 <option value="{{ size.size.id }}">{{ size.size.name }}</option>
@@ -67,7 +68,9 @@
                         </select>
                         <input type="hidden" name="quantity" value="1">
                         <input type="hidden" name="product_variation_id" value="{{ selected_variation.id }}">
-                        <button type="submit">Dodaj u košaricu</button>
+                        {% if user.is_authenticated and not user.superuser %}
+                            <button type="submit">Dodaj u košaricu</button>
+                        {% endif %}
                     </form>
                 </div>
                 

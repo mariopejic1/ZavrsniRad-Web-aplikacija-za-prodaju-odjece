@@ -31,15 +31,18 @@ nav {
     position: relative;
 }
 
-.nav-left{
+.nav-left {
     flex: 1;
 }
 
 .nav-right {
     flex: 1;
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center !important;
 }
 
-.nav-left ul{
+.nav-left ul {
     display: flex;
     list-style: none;
     padding: 0;
@@ -48,11 +51,23 @@ nav {
 
 .nav-right ul {
     display: flex;
-    justify-content: end;
     list-style: none;
+    align-items: center;
     padding: 0;
     margin: 0;
 }
+
+.nav-right button{
+    color: white;
+    background: black;
+    font-size: 12px;
+    border: black;
+} 
+
+.nav-right button:hover{
+    color: #ff9900;
+    background: black;
+} 
 
 .nav-left li, .nav-right li {
     margin: 0 10px;
@@ -64,10 +79,26 @@ nav {
     text-decoration: none;
     padding: 10px;
     transition: color 0.3s;
+    align-items: center;
 }
 
 .nav-left a:hover, .nav-right a:hover {
-    color: #ff9900; 
+    color: #ff9900;
+}
+
+.search-form {
+    display: flex; 
+    align-items: center; 
+    flex-direction: row;
+}
+
+.search-form input[type="text"] {
+    margin-right: 10px; 
+    flex: 1; 
+}
+
+.search-form button {
+    padding: 5px 10px; 
 }
 
 .logo {

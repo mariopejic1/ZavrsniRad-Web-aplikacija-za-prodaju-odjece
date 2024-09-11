@@ -1,0 +1,83 @@
+{% extends 'webshop/base.html' %}
+
+{% load static %}
+
+{% block title %}Rezultati pretraživanja{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/articles_display.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="sticky-header2">
+  <div class="filter-sorting-container">
+    <div class="filter-dropdown">
+      <h4>FILTRIRANJE</h4>
+      <div class="filter-dropdown-content">
+        <form method="GET" action="{% url 'webshop:search' %}">
+          <input type="hidden" name="query" value="{{ query }}">
+          <input type="hidden" name="category" value="{{ selected_category }}">
+          <input type="hidden" name="subcategory" value="{{ selected_subcategory }}">
+
+          <div class="filter-section">
+            <h4>Velicine</h4>
+            <ul>
+              {% for size in sizes %}
+                <li>
+                  <label>
+                    <input type="checkbox" name="size" value="{{ size.id }}" {% if size.id|stringformat:"s" in selected_sizes %}checked{% endif %}>
+                    {{ size.name }}
+                  </label>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <button type="submit">Primijeni</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="sorting">
+      <h4>SORTIRANJE: </h4>
+      <form method="GET" action="{% url 'webshop:search' %}">
+        <input type="hidden" name="query" value="{{ query }}">
+        <input type="hidden" name="color" value="{{ selected_colors|join:', ' }}">
+        <input type="hidden" name="size" value="{{ selected_sizes|join:', ' }}">
+        <input type="hidden" name="category" value="{{ selected_category }}">
+        <input type="hidden" name="subcategory" value="{{ selected_subcategory }}">
+
+        <select name="sort" onchange="this.form.submit()">
+          <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Najnoviji</option>
+          <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Najstariji</option>
+          <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Po cijeni - najniža</option>
+          <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Po cijeni - najviša</option>
+        </select>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="articles-container">
+  {% if filtered_product_variations %}
+    {% for variation in filtered_product_variations %}
+      <div class="article">
+        <div class="article-image-wrapper">
+          <a href="{% url 'webshop:articles_details' variation.product.category.slug variation.product.subcategory.slug variation.product.slug variation.color.name %}">
+            <img src="{{ variation.main_image.url }}" alt="{{ variation.product.name }}" class="main-image">
+          </a>
+        </div>
+        <div class="article-info">
+          <a href="{% url 'webshop:articles_details' variation.product.category.slug variation.product.subcategory.slug variation.product.slug variation.color.name %}">
+            <h2>{{ variation.product.name }} - {{ variation.color.name }}</h2>
+          </a>
+          <p class="price">€ {{ variation.product.price }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Nema rezultata za vašu pretragu.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

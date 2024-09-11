@@ -12,48 +12,55 @@
 <body>
     <div class="sticky-header">
         <nav>
-                <div class="nav-left">
-                    <ul>
-                        <li class="dropdown">
-                            <a href="{% url 'webshop:female_homepage' %}">ŽENE</a>
-                            <div class="dropdown-content">
-                                <a href="{% url 'webshop:articles_display' 'female' 'dresses' %}">Haljine</a>
-                                <a href="{% url 'webshop:articles_display' 'female' 'shirts' %}">Košulje</a>
-                                <a href="{% url 'webshop:articles_display' 'female' 't-shirts' %}">Majice</a>
-                                <a href="{% url 'webshop:articles_display' 'female' 'pants' %}">Hlače</a>
-                                <a href="{% url 'webshop:articles_display' 'female' 'jackets' %}">Jakne i kaputi</a>
-                            </div>
+            <div class="nav-left">
+                <ul>
+                    <li class="dropdown">
+                        <a href="{% url 'webshop:female_homepage' %}">ŽENE</a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'webshop:articles_display' 'zene' 'haljine' %}">Haljine</a>
+                            <a href="{% url 'webshop:articles_display' 'zene' 'kosulje' %}">Košulje</a>
+                            <a href="{% url 'webshop:articles_display' 'zene' 'majice' %}">Majice</a>
+                            <a href="{% url 'webshop:articles_display' 'zene' 'hlace' %}">Hlače</a>
+                            <a href="{% url 'webshop:articles_display' 'zene' 'jakne' %}">Jakne i kaputi</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="{% url 'webshop:male_homepage' %}">MUŠKARCI</a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'webshop:articles_display' 'muskarci' 'kosulje' %}">Košulje</a>
+                            <a href="{% url 'webshop:articles_display' 'muskarci' 'majice' %}">Majice</a>
+                            <a href="{% url 'webshop:articles_display' 'muskarci' 'hlace' %}">Hlače</a>
+                            <a href="{% url 'webshop:articles_display' 'muskarci' 'jakne' %}">Jakne i kaputi</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="logo">
+                <a href="#">LOGO</a>
+            </div>
+    
+            <div class="nav-right">
+                <ul>
+
+                        <li>
+                            <form method="GET" action="{% url 'webshop:search' %}" class="search-form">
+                                <input type="text" name="query" id="search-query" placeholder="Traži..." value="{{ request.GET.query }}" autocomplete="search">
+                                <button type="submit">TRAŽI</button>
+                            </form>
                         </li>
-                        <li class="dropdown">
-                            <a href="{% url 'webshop:male_homepage' %}">MUŠKARCI</a>
-                            <div class="dropdown-content">
-                                <a href="{% url 'webshop:articles_display' 'male' 'shirts' %}">Košulje</a>
-                                <a href="{% url 'webshop:articles_display' 'male' 't-shirts' %}">Majice</a>
-                                <a href="{% url 'webshop:articles_display' 'male' 'pants' %}">Hlače</a>
-                                <a href="{% url 'webshop:articles_display' 'male' 'jackets' %}">Jakne i kaputi</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="logo">
-                    <a href="#">LOGO</a>
-                </div>
-        
-                <div class="nav-right">
-                    <ul>
-                        <li><a href="#">TRAŽI</a></li>
-                        {% if user.is_authenticated %}
-                            {% if not user.is_superuser %}
-                                <li><a href="{% url 'webshop:profile' %}">PROFIL</a></li>
-                                <li><a href="{% url 'webshop:cart' %}">KOŠARICA</a></li>
-                                {% endif %}
-                                <li><a href="{% url 'webshop:logout' %}">ODJAVA</a></li>           
-                        {% else %}
-                            <li><a href="{% url 'webshop:login' %}">PRIJAVA</a></li>
+
+                    {% if user.is_authenticated %}
+                        {% if not user.is_superuser %}
+                            <li><a href="{% url 'webshop:profile' %}">PROFIL</a></li>
+                            <li><a href="{% url 'webshop:cart' %}">KOŠARICA</a></li>
                         {% endif %}
-                    </ul>
-                </div>
+                        <li><a href="{% url 'webshop:logout' %}">ODJAVA</a></li>           
+                    {% else %}
+                        <li><a href="{% url 'webshop:login' %}">PRIJAVA</a></li>
+                    {% endif %}
+                </ul>
+            </div>
         </nav>
     </div>
     
@@ -78,7 +85,7 @@
             <ul>
                 <li><a href="{% url 'webshop:returns' %}">Povrati i zamjene</a></li>
                 <li><a href="{% url 'webshop:delivery' %}">Informacije o dostavi</a></li>
-                <li><a href="{% url 'webshop:payment' %}">Načini plaćanja</a></li>
+                <li><a href="{% url 'webshop:payment' %}">Načini plačanja</a></li>
             </ul>
         </div>
     </footer>
