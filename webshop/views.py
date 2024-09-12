@@ -9,9 +9,6 @@ from django.dispatch import receiver
 from django.db.models import Q
 from django.db.models import Sum
 
-def home_view(request):
-    return render(request, 'webshop/home.html')    
-
 def base_view(request):
     context = {}
     return render(request, 'webshop/base.html', context)
@@ -116,9 +113,6 @@ def personal_data_view(request):
         return redirect('webshop:personal_data')
     
     return render(request, 'webshop/personal_data.html', {'user_account': user_account})
-
-def orders_view(request):
-    return render(request, 'webshop/orders.html')    
 
 def returns_view(request):
     return render(request, 'webshop/returns.html')    
@@ -262,6 +256,15 @@ def search_view(request):
     if selected_sizes and all(size.isdigit() for size in selected_sizes):
         product_variations = product_variations.filter(variation_sizes__size__id__in=selected_sizes, variation_sizes__is_available=True).distinct()
 
+    if sort == 'newest':
+        product_variations = product_variations.order_by('-product__created_at')
+    elif sort == 'oldest':
+        product_variations = product_variations.order_by('product__created_at')
+    elif sort == 'price_asc':
+        product_variations = product_variations.order_by('product__price')
+    elif sort == 'price_desc':
+        product_variations = product_variations.order_by('-product__price')
+
     context = {
         'filtered_product_variations': product_variations,
         'colors': colors,
@@ -280,18 +283,17 @@ def search_view(request):
 
 def cart_view(request):
     cart, created = Cart.objects.get_or_create(user=request.user.account)
-    
     cart_items = cart.items_in_cart.all()
-    
+
     subtotal = 0
     for item in cart_items:
-        product_price = item.product.product.price
-        item_total = item.quantity * product_price
-        subtotal += item_total
-    
+        product_price = item.product.product.price  
+        item_total = item.quantity * product_price  
+        subtotal += item_total  
+
     delivery_cost = 0 if subtotal >= 50 else 5
     total_price = subtotal + delivery_cost
-    
+
     context = {
         'cart': cart,
         'cart_items': cart_items,
@@ -312,25 +314,37 @@ def update_cart_item(request, item_id):
     return redirect('webshop:cart')  
 
 def remove_cart_item(request, item_id):
-    item = get_object_or_404(CartItem, id=item_id)
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user.account)
+
     if request.method == 'POST':
-        item.delete()
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+        else:
+            cart_item.delete()
+
     return redirect('webshop:cart')
+
 
 def add_to_cart(request, category_name, subcategory_name, product_slug, color=None):
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity', 1))
         product_variation_id = request.POST.get('product_variation_id')
-
+        size_id = request.POST.get('size')  
+        
         product_variation = get_object_or_404(ProductVariation, id=product_variation_id)
+        
+        size = get_object_or_404(ProductVariationSize, id=size_id) if size_id else None
+        
         cart, created = Cart.objects.get_or_create(user=request.user.account)
-
+        
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
-            product=product_variation,  
+            product=product_variation,
+            size=size,
             defaults={'quantity': quantity}
         )
-
+        
         if not created:
             cart_item.quantity += quantity
             cart_item.save()

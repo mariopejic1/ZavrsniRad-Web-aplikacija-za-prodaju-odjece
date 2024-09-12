@@ -115,6 +115,7 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items_in_cart', on_delete=models.CASCADE)  
     product = models.ForeignKey(ProductVariation, on_delete=models.CASCADE)  
+    size = models.ForeignKey(ProductVariationSize, on_delete=models.CASCADE, null=True, blank=True)  
     quantity = models.PositiveIntegerField(default=1)
     
     def __str__(self):

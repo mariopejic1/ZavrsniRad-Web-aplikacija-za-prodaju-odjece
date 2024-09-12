@@ -16,38 +16,58 @@
         {% if cart.items_in_cart.count %}
             <ul>
                 {% for item in cart.items_in_cart.all %}
-                    <li>{{ item.product.product.name }} - {{ item.quantity }}</li>
+                <li class="cart-item">
+                    <div class="cart-item-image">
+                            <img src="{{ item.product.main_image.url }}" alt="{{ item.product.product.name }}">
+                        </a>
+                    </div>
+                    <div class="cart-item-details">
+                        <p><strong>{{ item.product.product.name }}</strong></p>
+                        <p>Boja: {{ item.product.color.name }}</p>
+                        <p>Veličina: {{ item.size.size }}</p>
+                        <p>Količina: {{ item.quantity }}</p>
+                        <form action="{% url 'webshop:remove_cart_item' item.id %}" method="post" class="remove-item-form"></form>
+                            {% csrf_token %}
+                            <button type="submit" class="remove-item-btn">Ukloni</button>
+                        </form>
+                    </div>
+                    <div class="cart-item-actions">
+                        <p><strong>€ {{ item.product.product.price }}</strong></p>
+                    </div>
+                </li>
                 {% endfor %}
             </ul>
+
+            <div class="delivery-info">
+                <h3>Podaci za dostavu</h3>
+                <p>{{ user.account.name }} {{ user.account.surname }}</p>
+                <p>{{ user.account.street }}, {{ user.account.house_number }}</p>
+                <p>{{ user.account.postal_number }}, {{ user.account.city }}</p>
+                <p>{{ user.account.phone }}</p>
+                <p>{{ user.email }}</p>
+            </div>
+
+            <div class="payment-info">
+                <h3>Metoda plaćanja</h3>
+                    <label><input type="radio" name="payment_method" value="PP"> Plaćanje pouzećem</label><br>
+                    <label>Internetsko bankarstvo</label><br>
+            </div>
+
+            <div class="total">
+                <form action="{% url 'webshop:create_order' %}" method="post">
+                    {% csrf_token %}
+                    <h3>Detalji</h3>
+                    <p>Međuzbroj: € {{ subtotal }}</p>
+                    <p>Dostava: € {{ delivery_cost }}</p>
+                    <p><strong>Ukupno:</strong> € {{ total_price }}</p>
+                    <button type="submit">Naruči</button>
+                </form>
+            </div>
         {% else %}
-            <p>Your cart is empty.</p>
+            <p class="empty-cart-message">Vaša košarica je prazna.</p>
         {% endif %}
     </div>
-
-    <form action="{% url 'webshop:create_order' %}" method="post">
-        {% csrf_token %}
-        <div class="delivery-info">
-            <h2>Delivery Information</h2>
-            <p><strong>Name:</strong> {{ request.user.account.name }}</p>
-            <p><strong>Surname:</strong> {{ request.user.account.surname }}</p>
-            <p><strong>Address:</strong> {{ request.user.account.street }}</p>
-            <p><strong>House Number:</strong> {{ request.user.account.house_number }}</p>
-            <p><strong>Postal Code:</strong> {{ request.user.account.postal_number }}</p>
-            <p><strong>City:</strong> {{ request.user.account.city }}</p>
-            <p><strong>Phone:</strong> {{ request.user.account.phone }}</p>
-            <p><strong>Email:</strong> {{ request.user.account.email }}</p>
-            
-            <h3>Payment Method</h3>
-            <label><input type="radio" name="payment_method" value="PP"> Plaćanje pouzećem</label><br>
-            <label>Internetsko Bankarstvo</label><br>
-            
-            <h3>Summary</h3>
-            <p><strong>Subtotal:</strong> €{{ subtotal }}</p>
-            <p><strong>Delivery Cost:</strong> €{{ delivery_cost }}</p>
-            <p><strong>Total Price:</strong> €{{ total_price }}</p>
-            
-            <button type="submit">Naruči</button>
-        </div>
-    </form>
 </div>
 {% endblock %}
+
+

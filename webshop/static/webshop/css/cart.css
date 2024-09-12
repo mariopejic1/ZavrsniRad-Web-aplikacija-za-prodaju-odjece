@@ -1,32 +1,136 @@
 .cart-container {
-    width: 80%;
-    margin: 0 auto;
+    width: 50%;
+    margin: 30px auto 30px auto;
+    
 }
-.cart-items {
+
+.cart-container h1{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
     margin-bottom: 20px;
 }
+
+.cart-items {
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.cart-items ul{
+    padding: 0;
+}
+
 .cart-item {
     display: flex;
     justify-content: space-between;
-    border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
+    border: 1px solid black;
 }
-.cart-item-details {
-    flex: 1;
+
+.cart-item-image {
+    flex: 1; 
+    margin-right: 10px;
 }
+
 .cart-item-image img {
-    max-width: 150px;
-    max-height: 150px;
+    height: 250px;
+    max-width: 100%; 
+    object-fit: cover; 
 }
+
+.cart-item-details {
+    flex: 2; 
+    margin-right: 10px;
+}
+
+.cart-item-details p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+.cart-item-actions {
+    flex: 1; 
+    text-align: right; 
+}
+
+.remove-item-form {
+    display: flex;
+    justify-content: flex-end; 
+    margin-top: 10px;
+}
+
+.remove-item-btn {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.remove-item-btn:hover {
+    background-color: darkgray;
+}
+
 .delivery-info {
-    border-top: 1px solid #ccc;
-    padding-top: 20px;
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
 }
-.remove-item {
-    color: red;
-    text-decoration: none;
+.delivery-info h3{
+    font-size: 20px;
+    font-weight: bold;
 }
-.remove-item:hover {
-    text-decoration: underline;
+
+.delivery-info p{
+    font-size: 16px;
+    margin: 5px 0 5px 0;
+}
+
+.payment-info {
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
+}
+.payment-info h3{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.payment-info label{
+    font-size: 16px;
+    margin: 5px 0 5px 0;
+}
+
+.total {
+    margin-bottom: 20px;
+}
+.total h3{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.total p{
+    font-size: 16px;
+    margin: 5px 0 5px 0;
+}
+
+.total button{
+    margin-top: 20px;
+    text-align: center; 
+}
+
+.total button {
+    background-color: black;
+    color: white;
+    padding: 5px 30px; 
+    font-size: 20px;
+    border: none; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.total button:hover {
+    background-color: darkgray; 
 }

@@ -131,7 +131,8 @@
 }
 
 .color-options h3{
-    font-size: 14px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .color-options a{
@@ -145,9 +146,12 @@
 }
 
 .size-options{
-    border-bottom: 1px solid darkgray;
-    border-top: 1px solid darkgray;
     margin-bottom: 20px;
+}
+
+.size-options h3{
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .size-options p{
@@ -156,7 +160,7 @@
 }
 
 .desc {
-    margin-top: 60px;
+    margin-top: 30px;
     border: 0.5px solid black;
 }
 
@@ -168,7 +172,7 @@
 
 .desc p{
     font-size: 14px;
-    margin: 20px;
+    margin: 15px;
 }
 
 .comments {
@@ -215,15 +219,16 @@ textarea {
     font-size: 0.9em;
 }
 
-button {
+.size-options button {
     background-color: black;
     color: white;
     border: none;
     padding: 8px 12px; 
     font-size: 0.9em;
     cursor: pointer;
+    margin-left: 10px;
 }
 
-button:hover {
+.size-options button:hover {
     background-color: gray;
 }

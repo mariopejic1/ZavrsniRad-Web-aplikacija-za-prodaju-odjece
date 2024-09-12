@@ -58,7 +58,7 @@
                 <div class="size-options">
                     <form method="post" action="{% url 'webshop:add_to_cart' category_name subcategory_name product.slug selected_variation.color.name %}">
                         {% csrf_token %}
-                        <h5>Odaberi veličinu:</h5>
+                        <h3>Izaberite veličinu:</h3>
                         <select name="size" id="size">
                             {% for size in available_sizes %}
                                 <option value="{{ size.size.id }}">{{ size.size.name }}</option>
