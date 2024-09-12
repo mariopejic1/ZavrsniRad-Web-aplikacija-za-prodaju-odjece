@@ -1,0 +1,19 @@
+{% extends 'webshop/base.html' %}
+
+{% block title %}Detalji narudžbe{% endblock %}
+
+{% block content %}
+<div class="order-summary">
+    <h1>Detalji narudžbe</h1>
+    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+    <p><strong>Payment Method:</strong> {{ order.get_payment_method_display }}</p>
+
+    <h2>Items</h2>
+    <ul>
+    {% for item in order.order_items.all %}
+        <li>{{ item.product.product.name }} - {{ item.quantity }} x €{{ item.product.product.price }} = €{{ item.quantity|floatformat:2 }}</li>
+    {% endfor %}
+    </ul>
+
+    <p><strong>Subtotal:</strong> €{{ total_price }}</p></div>
+{% endblock %}

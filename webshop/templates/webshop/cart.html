@@ -24,6 +24,8 @@
         {% endif %}
     </div>
 
+    <form action="{% url 'webshop:create_order' %}" method="post">
+        {% csrf_token %}
         <div class="delivery-info">
             <h2>Delivery Information</h2>
             <p><strong>Name:</strong> {{ request.user.account.name }}</p>
@@ -36,15 +38,16 @@
             <p><strong>Email:</strong> {{ request.user.account.email }}</p>
             
             <h3>Payment Method</h3>
-            <label><input type="checkbox" name="payment_method" value="cash_on_delivery">Plaćanje pouzećem</label><br>
-                <p>Internetsko Bankarstvo</p><br>
+            <label><input type="radio" name="payment_method" value="PP"> Plaćanje pouzećem</label><br>
+            <label>Internetsko Bankarstvo</label><br>
             
             <h3>Summary</h3>
             <p><strong>Subtotal:</strong> €{{ subtotal }}</p>
             <p><strong>Delivery Cost:</strong> €{{ delivery_cost }}</p>
             <p><strong>Total Price:</strong> €{{ total_price }}</p>
             
-            <button type="submit">Proceed to Checkout</button>
+            <button type="submit">Naruči</button>
         </div>
+    </form>
 </div>
 {% endblock %}

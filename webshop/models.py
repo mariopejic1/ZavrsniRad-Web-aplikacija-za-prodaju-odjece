@@ -143,6 +143,17 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.order_number} for {self.account.name} "
+    
+class OrderItem(models.Model):
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='order_items')
+    product = models.ForeignKey(ProductVariation, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    
+    def __str__(self):
+        return f"{self.quantity} x {self.product.product.name} in Order {self.order.id}"
+    
+    def total_price(self):
+        return self.quantity * self.product.product.price
 
 class Comment(models.Model):
     product = models.ForeignKey(ProductVariation, on_delete=models.CASCADE, related_name='comments')

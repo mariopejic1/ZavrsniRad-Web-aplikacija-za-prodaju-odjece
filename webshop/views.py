@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import Account, Product, Category, SubCategory, ProductVariation, Comment, Cart, CartItem, Order, Size, ProductVariationSize, Color
+from .models import Account, Product, Category, SubCategory, ProductVariation, Comment, Cart, CartItem, Order, Size, ProductVariationSize, Color, OrderItem
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.db.models import Q, Exists, OuterRef
+from django.db.models import Q
+from django.db.models import Sum
 
 def home_view(request):
     return render(request, 'webshop/home.html')    
@@ -230,67 +231,6 @@ def articles_details_view(request, category_name, subcategory_name, product_slug
     }
 
     return render(request, 'webshop/articles_details.html', context)
-
-
-def cart_view(request):
-    cart, created = Cart.objects.get_or_create(user=request.user.account)
-    cart_items = cart.items_in_cart.all()  
-    
-
-    subtotal = 0
-    for item in cart_items:
-        product_price = item.product.product.price  
-        item_total = item.quantity * product_price  
-        subtotal += item_total  
-    
-    delivery_cost = 0 if subtotal >= 50 else 5
-    
-    total_price = subtotal + delivery_cost
-    
-    context = {
-        'cart': cart,
-        'cart_items': cart_items,
-        'subtotal': subtotal,
-        'delivery_cost': delivery_cost,
-        'total_price': total_price,
-    }
-    
-    return render(request, 'webshop/cart.html', context)
-
-def update_cart_item(request, item_id):
-    item = get_object_or_404(CartItem, id=item_id)
-    if request.method == 'POST':
-        new_quantity = request.POST.get('quantity')
-        if new_quantity and int(new_quantity) > 0:
-            item.quantity = int(new_quantity)
-            item.save()
-    return redirect('webshop/cart.html')
-
-def remove_cart_item(request, item_id):
-    item = get_object_or_404(CartItem, id=item_id)
-    if request.method == 'POST':
-        item.delete()
-    return redirect('webshop/cart.html')
-
-def add_to_cart(request, category_name, subcategory_name, product_slug, color=None):
-    if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 1))
-        product_variation_id = request.POST.get('product_variation_id')
-
-        product_variation = get_object_or_404(ProductVariation, id=product_variation_id)
-        cart, created = Cart.objects.get_or_create(user=request.user.account)
-
-        cart_item, created = CartItem.objects.get_or_create(
-            cart=cart,
-            product=product_variation,  
-            defaults={'quantity': quantity}
-        )
-
-        if not created:
-            cart_item.quantity += quantity
-            cart_item.save()
-
-        return redirect('webshop:articles_details', category_name=category_name, subcategory_name=subcategory_name, product_slug=product_slug, color=color)
     
 def search_view(request):
     query = request.GET.get('query', '')
@@ -338,10 +278,112 @@ def search_view(request):
 
     return render(request, 'webshop/search.html', context)
 
+def cart_view(request):
+    cart, created = Cart.objects.get_or_create(user=request.user.account)
+    
+    cart_items = cart.items_in_cart.all()
+    
+    subtotal = 0
+    for item in cart_items:
+        product_price = item.product.product.price
+        item_total = item.quantity * product_price
+        subtotal += item_total
+    
+    delivery_cost = 0 if subtotal >= 50 else 5
+    total_price = subtotal + delivery_cost
+    
+    context = {
+        'cart': cart,
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+        'delivery_cost': delivery_cost,
+        'total_price': total_price,
+    }
+    
+    return render(request, 'webshop/cart.html', context)
 
+def update_cart_item(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    if request.method == 'POST':
+        new_quantity = request.POST.get('quantity')
+        if new_quantity and int(new_quantity) > 0:
+            item.quantity = int(new_quantity)
+            item.save()
+    return redirect('webshop:cart')  
 
+def remove_cart_item(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    if request.method == 'POST':
+        item.delete()
+    return redirect('webshop:cart')
 
+def add_to_cart(request, category_name, subcategory_name, product_slug, color=None):
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        product_variation_id = request.POST.get('product_variation_id')
 
+        product_variation = get_object_or_404(ProductVariation, id=product_variation_id)
+        cart, created = Cart.objects.get_or_create(user=request.user.account)
+
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product_variation,  
+            defaults={'quantity': quantity}
+        )
+
+        if not created:
+            cart_item.quantity += quantity
+            cart_item.save()
+
+        return redirect('webshop:articles_details', category_name=category_name, subcategory_name=subcategory_name, product_slug=product_slug, color=color)
+    
+def create_order_view(request):
+    if request.method == 'POST':
+        cart = Cart.objects.get(user=request.user.account)
+        cart_items = cart.items.all()
+
+        order = Order.objects.create(
+            account=request.user.account,
+            date_ordered=timezone.now(),
+            status='IP',  
+            payment_method=request.POST.get('payment_method', 'PP') 
+        )
+
+        for cart_item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=cart_item.product,
+                quantity=cart_item.quantity
+            )
+
+        cart.items_in_cart.all().delete()
+        return redirect('webshop:order_details', order_id=order.id)  
+
+    return redirect('webshop:cart')
+
+def order_details_view(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    
+    order_items = order.order_items.all()
+    total_price = sum(item.total_price() for item in order_items)
+    
+    context = {
+        'order': order,
+        'order_items': order_items,
+        'total_price': total_price
+    }
+    return render(request, 'webshop/order_details.html', context)
+
+def orders_history_view(request):
+    orders = Order.objects.all()
+
+    for order in orders:
+        order.total_price = sum(item.total_price() for item in order.order_items.all())
+
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'webshop/orders_history.html', context)
 
 
 

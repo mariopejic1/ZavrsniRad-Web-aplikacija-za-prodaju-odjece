@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Account, Category, SubCategory, Color, Size, Product, ProductVariationImage,
-    ProductVariation, ProductVariationSize, Comment, CartItem
+    ProductVariation, ProductVariationSize, Comment, CartItem, Order
 )
 
 class ProductVariationImageInline(admin.TabularInline):
@@ -61,3 +61,16 @@ admin.site.register(Comment, CommentAdmin)
 class CartItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'cart', 'product', 'quantity')  
     list_filter = ('cart', 'product')  
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('order_number', 'account', 'date_ordered', 'status', 'payment_method')
+    list_filter = ('status', 'payment_method')
+    search_fields = ('order_number', 'account__name', 'account__surname')
+    list_editable = ('status',)  
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk and request.user.is_superuser:
+            obj.account = request.user.account
+        super().save_model(request, obj, form, change)
+
+admin.site.register(Order, OrderAdmin)
