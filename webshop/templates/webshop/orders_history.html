@@ -1,20 +1,31 @@
 {% extends 'webshop/base.html' %}
 
-{% block title %}Povijest Narudžbi{% endblock %}
+{% load static %}
+
+{% block title %}Povijest narudžbi{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/orders_history.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="orders-history-container">
-    <h1>Povijest Narudžbi</h1>
-
+    <h1>Povijest narudžbi</h1>
     {% if orders %}
         <ul>
             {% for order in orders %}
             <li class="order-history-item">
-                <p><strong>Broj narudžbe:</strong> {{ order.order_number }}</p>
-                <p><strong>Status:</strong> {{ order.get_status_display }}</p>
-                <p><strong>Datum narudžbe:</strong> {{ order.date_ordered }}</p>
-                <p><strong>Ukupno:</strong> € {{ order.total_price }}</p>
-                <a href="{% url 'webshop:order_details' order_id=order.id %}">Pogledaj detalje</a>
+                <div class="order-history-details">
+                    <div class="order-history-info">
+                        <p>Broj narudžbe: {{ order.order_number }}</p>
+                        <p>{{ order.get_status_display }}</p>
+                        <p><strong>€ {{ order.total_price }}</strong></p>
+                    </div>
+                    <div class="order-history-meta">
+                        <p>{{ order.date_ordered|date:"d. m. Y" }}</p>
+                        <a href="{% url 'webshop:order_details' order_id=order.id %}">Detalji</a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>

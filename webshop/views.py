@@ -364,15 +364,19 @@ def add_to_cart(request, category_name, subcategory_name, product_slug, color=No
     
 def create_order_view(request):
     if request.method == 'POST':
-        # Get the cart for the current user
         cart = get_object_or_404(Cart, user=request.user.account)
         cart_items = cart.items_in_cart.all()
 
-        # Create a new order
+        payment_method = request.POST.get('payment_method')
+
+        if not payment_method:
+            messages.error(request, 'Molimo vas da odaberete način plaćanja.')
+            return redirect('webshop:cart')
+
         order = Order.objects.create(
             account=request.user.account,
             status='IP',
-            payment_method=request.POST.get('payment_method', 'PP')
+            payment_method=payment_method
         )
 
         for cart_item in cart_items:

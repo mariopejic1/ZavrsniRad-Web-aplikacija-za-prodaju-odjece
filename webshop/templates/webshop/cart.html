@@ -49,8 +49,16 @@
 
             <div class="payment-info">
                 <h3>Metoda plaćanja</h3>
+                <form action="{% url 'webshop:create_order' %}" method="post">
+                    {% csrf_token %}
                     <label><input type="radio" name="payment_method" value="PP"> Plaćanje pouzećem</label><br>
-                    <label>Internetsko bankarstvo</label><br>
+                    <label>- Internetsko bankarstvo</label><br>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="error-message">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </form>
             </div>
 
             <div class="total">
@@ -69,5 +77,3 @@
     </div>
 </div>
 {% endblock %}
-
-

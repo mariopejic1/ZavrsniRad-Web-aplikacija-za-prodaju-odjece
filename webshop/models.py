@@ -143,7 +143,7 @@ class Order(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     date_ordered = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='IP')
-    payment_method = models.CharField(max_length=2, choices=PAYMENT_METHOD_CHOICES, default='PP')
+    payment_method = models.CharField(max_length=2, choices=PAYMENT_METHOD_CHOICES)
     order_number = models.CharField(max_length=10, unique=True, default=generate_order_number, editable=False)
     items = models.ManyToManyField('OrderItem', related_name='order_items', blank=True)  
 
