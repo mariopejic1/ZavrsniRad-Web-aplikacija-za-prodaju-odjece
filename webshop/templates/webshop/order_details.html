@@ -3,17 +3,43 @@
 {% block title %}Detalji narudžbe{% endblock %}
 
 {% block content %}
-<div class="order-summary">
-    <h1>Detalji narudžbe</h1>
-    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
-    <p><strong>Payment Method:</strong> {{ order.get_payment_method_display }}</p>
+<div class="order-details-container">
+    <h2>Detalji Narudžbe</h2>
 
-    <h2>Items</h2>
+    <p><strong>Broj narudžbe:</strong> {{ order.order_number }}</p>
+    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+    <p><strong>Datum narudžbe:</strong> {{ order.date_ordered }}</p>
+    <p><strong>Način plačanja:</strong> {{ order.get_payment_method_display }}</p>
+    <p><strong>Ukupno:</strong> € {{ total_price }}</p>
+    
+    <h2>Informacije o kupcu</h2>
+    <p><strong>Ime:</strong> {{ order.account.name }}</p>
+    <p><strong>Prezime:</strong> {{ order.account.surname }}</p>
+    <p><strong>Adresa:</strong> {{ order.account.street }} {{ order.account.house_number }}, 
+        {{ order.account.postal_number }} {{ order.account.city }}</p>
+    <p><strong>Telefon:</strong> {{ order.account.phone }}</p>
+    <p><strong>Email:</strong> {{ order.account.email }}</p>
+
+    <h2>Stavke narudžbe</h2>
     <ul>
-    {% for item in order.order_items.all %}
-        <li>{{ item.product.product.name }} - {{ item.quantity }} x €{{ item.product.product.price }} = €{{ item.quantity|floatformat:2 }}</li>
-    {% endfor %}
+        {% for item in order_items %}
+        <li class="order-item">
+            <div class="order-item-image">
+                <img src="{{ item.product.main_image.url }}" alt="{{ item.product.product.name }}">
+            </div>
+            <div class="order-item-details">
+                <p><strong>{{ item.product.product.name }}</strong></p>
+                <p>Boja: {{ item.product.color.name }}</p>
+                <p>Veličina: {{ item.size }}</p>
+                <p>Količina: {{ item.quantity }}</p>
+            </div>
+            <div class="order-item-actions">
+                <p><strong>€ {{ item.total_price }}</strong></p>
+            </div>
+        </li>
+        {% endfor %}
     </ul>
 
-    <p><strong>Subtotal:</strong> €{{ total_price }}</p></div>
+
+</div>
 {% endblock %}

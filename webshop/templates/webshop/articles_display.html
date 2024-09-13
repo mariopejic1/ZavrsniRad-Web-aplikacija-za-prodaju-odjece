@@ -9,78 +9,79 @@
 {% endblock %}
 
 {% block content %}
-<div class="sticky-header2">
-  <div class="filter-sorting-container">
+<div class="filter-sorting-container">
     <div class="filter-dropdown">
-      <h4>FILTRIRANJE</h4>
-      <div class="filter-dropdown-content">
-          <form method="GET" action="{% url 'webshop:articles_display' category_name subcategory_name %}">
-            <div class="filter-section">
-              <h4>Boje</h4>
-              <ul>
-                  {% for color in colors %}
-                      <li>
-                          <label>
-                              <input type="checkbox" name="color" value="{{ color.id }}" {% if color.id|stringformat:"s" in selected_colors %}checked{% endif %}>
-                              {{ color.name }}
-                          </label>
-                      </li>
-                  {% endfor %}
-              </ul>
-            </div>
-              
-              <div class="filter-section">
-                  <h4>Veličine</h4>
-                  <ul>
-                      {% for size in sizes %}
-                          <li>
-                              <label>
-                                  <input type="checkbox" name="size" value="{{ size.id }}" {% if size.id|stringformat:"s" in selected_sizes %}checked{% endif %}>
-                                  {{ size.name }}
-                              </label>
-                          </li>
-                      {% endfor %}
-                  </ul>
-              </div>
-              
-              <button type="submit">Primijeni</button>
-          </form>
-      </div>
-  </div>
+        <h4>FILTRIRANJE</h4>
+        <div class="filter-dropdown-content">
+            <form method="GET" action="{% url 'webshop:articles_display' category_name subcategory_name %}">
+                <input type="hidden" name="sort" value="{{ sort }}">
+
+                <div class="filter-section">
+                    <h4>Boje</h4>
+                    <ul>
+                        {% for color in colors %}
+                            <li>
+                                <label>
+                                    <input type="checkbox" name="color" value="{{ color.id }}" {% if color.id|stringformat:"s" in selected_colors %}checked{% endif %}>
+                                    {{ color.name }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="filter-section">
+                    <h4>Veličine</h4>
+                    <ul>
+                        {% for size in sizes %}
+                            <li>
+                                <label>
+                                    <input type="checkbox" name="size" value="{{ size.id }}" {% if size.id|stringformat:"s" in selected_sizes %}checked{% endif %}>
+                                    {{ size.name }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <button type="submit">Primijeni</button>
+            </form>
+        </div>
+    </div>
 
     <div class="sorting">
-      <h4>SORTIRANJE: </h4>
-    
-      <form method="GET" action="{% url 'webshop:sort_articles' category_name subcategory_name %}">
-        <select name="sort" onchange="this.form.submit()">
-          <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Najnoviji</option>
-          <option value="oldest" {% if request.GET.sort == 'oldest' %}selected{% endif %}>Najstariji</option>
-          <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>Po cijeni - najniža</option>
-          <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>Po cijeni - najviša</option>
-        </select>
-    </form>
+        <h4>SORTIRANJE:</h4>
+        <form method="GET" action="{% url 'webshop:articles_display' category_name subcategory_name %}">
+            <input type="hidden" name="color" value="{{ selected_colors|join:',' }}">
+            <input type="hidden" name="size" value="{{ selected_sizes|join:',' }}">
+            <select name="sort" onchange="this.form.submit()">
+                <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Najnoviji</option>
+                <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Najstariji</option>
+                <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Po cijeni - najniža</option>
+                <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Po cijeni - najviša</option>
+            </select>
+        </form>
     </div>
-  </div>
 </div>
 
 <div class="articles-container">
-  {% if filtered_product_variations.exists %}
-    {% for variation in filtered_product_variations %}
-      <div class="article">
-        <div class="article-image-wrapper">
-            <a href="{% url 'webshop:articles_details' category_name subcategory_name variation.product.slug variation.color.name %}">
-                <img src="{{ variation.main_image.url }}" alt="{{ variation.product.name }}" class="main-image">
-            </a>
-        </div>
-        <div class="article-info">
-          <a href="{% url 'webshop:articles_details' category_name subcategory_name variation.product.slug variation.color.name %}">
-            <h2>{{ variation.product.name }} - {{ variation.color.name }}</h2>
-          </a>
-          <p class="price">€ {{ variation.product.price }}</p>
-        </div>
-      </div>
-    {% endfor %}
-  {% endif %}
+    {% if filtered_product_variations %}
+        {% for variation in filtered_product_variations %}
+            <div class="article">
+                <div class="article-image-wrapper">
+                    <a href="{% url 'webshop:articles_details' category_name subcategory_name variation.product.slug variation.color.name %}">
+                        <img src="{{ variation.main_image.url }}" alt="{{ variation.product.name }}" class="main-image">
+                    </a>
+                </div>
+                <div class="article-info">
+                    <a href="{% url 'webshop:articles_details' category_name subcategory_name variation.product.slug variation.color.name %}">
+                        <h2>{{ variation.product.name }} - {{ variation.color.name }}</h2>
+                    </a>
+                    <p class="price">€ {{ variation.product.price }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
 </div>
 
 {% endblock %}

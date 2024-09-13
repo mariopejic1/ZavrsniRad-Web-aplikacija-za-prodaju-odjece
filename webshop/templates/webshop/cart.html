@@ -26,7 +26,7 @@
                         <p>Boja: {{ item.product.color.name }}</p>
                         <p>Veličina: {{ item.size.size }}</p>
                         <p>Količina: {{ item.quantity }}</p>
-                        <form action="{% url 'webshop:remove_cart_item' item.id %}" method="post" class="remove-item-form"></form>
+                        <form action="{% url 'webshop:remove_cart_item' item.id %}" method="post" class="remove-item-form">
                             {% csrf_token %}
                             <button type="submit" class="remove-item-btn">Ukloni</button>
                         </form>

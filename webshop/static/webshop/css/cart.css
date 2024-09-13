@@ -56,7 +56,6 @@
 
 .remove-item-form {
     display: flex;
-    justify-content: flex-end; 
     margin-top: 10px;
 }
 
@@ -133,4 +132,8 @@
 
 .total button:hover {
     background-color: darkgray; 
+}
+
+.empty-cart-message {
+    text-align: center;
 }

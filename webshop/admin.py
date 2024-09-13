@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Account, Category, SubCategory, Color, Size, Product, ProductVariationImage,
-    ProductVariation, ProductVariationSize, Comment, CartItem, Order
+    ProductVariation, ProductVariationSize, Comment, CartItem, Order, OrderItem
 )
 
 class ProductVariationImageInline(admin.TabularInline):
@@ -62,15 +62,18 @@ class CartItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'cart', 'product', 'quantity')  
     list_filter = ('cart', 'product')  
 
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ('order_number', 'account', 'date_ordered', 'status', 'payment_method')
-    list_filter = ('status', 'payment_method')
-    search_fields = ('order_number', 'account__name', 'account__surname')
-    list_editable = ('status',)  
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 1
+    fields = ('product', 'size', 'quantity', 'total_price')
+    readonly_fields = ('total_price',)
 
-    def save_model(self, request, obj, form, change):
-        if not obj.pk and request.user.is_superuser:
-            obj.account = request.user.account
-        super().save_model(request, obj, form, change)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('order_number', 'account', 'status', 'date_ordered', 'payment_method')
+    list_filter = ('status', 'payment_method', 'date_ordered')
+    search_fields = ('order_number', 'account__name', 'account__surname')
+    readonly_fields = ('order_number', 'date_ordered', 'status', 'payment_method')
+    inlines = [OrderItemInline]
 
 admin.site.register(Order, OrderAdmin)
+

@@ -42,40 +42,67 @@ def register_view(request):
         name = request.POST.get('name')
         surname = request.POST.get('surname')
         email = request.POST.get('email')
-        home_address = request.POST.get('home_address')
+        city = request.POST.get('city')
+        postal_number = request.POST.get('postal_number')
+        street = request.POST.get('street')
+        house_number = request.POST.get('house_number')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
-        if User.objects.filter(username=email).exists():
-            messages.error(request, 'Već postoji račun s ovim emailom!')
-        
-        elif len(password) < 8:
-            messages.error(request, 'Lozinka mora biti barem 8 znakova duga!')
-        
-        elif password != confirm_password:
-            messages.error(request, 'Lozinke se ne podudaraju!')
-        
-        else:
-            user = User.objects.create_user(username=email, email=email, password=password)
-            Account.objects.create(
-                user=user,
-                name=name,
-                surname=surname,
-                email=email,
-                home_address=home_address,
-                phone=phone
-            )
-            messages.success(request, 'Registracija uspješna! Možete se prijaviti.')
-            return redirect('webshop:login')
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Račun s ovim emailom već postoji!')
+            return render(request, 'webshop/register.html', {
+                'name': name,
+                'surname': surname,
+                'email': email,
+                'city': city,
+                'postal_number': postal_number,
+                'street': street,
+                'house_number': house_number,
+                'phone': phone,
+            })
 
-        return render(request, 'webshop/register.html', {
-            'name': name,
-            'surname': surname,
-            'email': email,
-            'home_address': home_address,
-            'phone': phone
-        })
+        if len(password) < 8:
+            messages.error(request, 'Lozinka mora sadržavati najmanje 8 znakova!')
+            return render(request, 'webshop/register.html', {
+                'name': name,
+                'surname': surname,
+                'email': email,
+                'city': city,
+                'postal_number': postal_number,
+                'street': street,
+                'house_number': house_number,
+                'phone': phone,
+            })
+
+        if password != confirm_password:
+            messages.error(request, 'Lozinke se ne podudaraju!')
+            return render(request, 'webshop/register.html', {
+                'name': name,
+                'surname': surname,
+                'email': email,
+                'city': city,
+                'postal_number': postal_number,
+                'street': street,
+                'house_number': house_number,
+                'phone': phone,
+            })
+
+        user = User.objects.create_user(username=email, email=email, password=password)
+        Account.objects.create(
+            user=user,
+            name=name,
+            surname=surname,
+            email=email,
+            phone=phone,
+            city=city,
+            postal_number=postal_number,
+            street=street,
+            house_number=house_number
+        )
+        messages.success(request, 'Registracija je uspješna! Sada se možete prijaviti.')
+        return redirect('webshop:login')
 
     return render(request, 'webshop/register.html')
 
@@ -124,17 +151,14 @@ def delivery_view(request):
     return render(request, 'webshop/delivery.html') 
 
 def articles_display_view(request, category_name, subcategory_name):
-    colors = Color.objects.all()
-    sizes = Size.objects.all()
+    sort = request.GET.get('sort', 'price_asc')
+    selected_colors = [color for color in request.GET.getlist('color') if color.isdigit()]
+    selected_sizes = [size for size in request.GET.getlist('size') if size.isdigit()]
 
     category = get_object_or_404(Category, slug=category_name)
     subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
 
-    selected_colors = request.GET.getlist('color')
-    selected_sizes = request.GET.getlist('size')
-
     products = Product.objects.filter(subcategory=subcategory)
-
     product_variations = ProductVariation.objects.filter(product__in=products)
 
     if selected_colors:
@@ -147,44 +171,30 @@ def articles_display_view(request, category_name, subcategory_name):
         ).values_list('product_variation_id', flat=True)
         product_variations = product_variations.filter(id__in=product_variation_sizes)
 
+    if sort == 'newest':
+        product_variations = product_variations.order_by('-product__created_at')
+    elif sort == 'oldest':
+        product_variations = product_variations.order_by('product__created_at')
+    elif sort == 'price_asc':
+        product_variations = product_variations.order_by('product__price')
+    elif sort == 'price_desc':
+        product_variations = product_variations.order_by('-product__price')
+
     filtered_products = Product.objects.filter(variations__in=product_variations).distinct()
 
     context = {
         'category_name': category_name,
         'subcategory_name': subcategory_name,
-        'products': filtered_products if selected_colors or selected_sizes else products,  
+        'products': filtered_products,
         'filtered_product_variations': product_variations.distinct(),
-        'colors': colors,
-        'sizes': sizes,
+        'colors': Color.objects.all(),
+        'sizes': Size.objects.all(),
         'selected_colors': selected_colors,
         'selected_sizes': selected_sizes,
+        'sort': sort,
     }
 
     return render(request, 'webshop/articles_display.html', context)
-
-def sort_articles(request, category_name, subcategory_name):
-    sort_option = request.GET.get('sort', 'price_asc')
-    
-    category = get_object_or_404(Category, slug=category_name)
-    subcategory = get_object_or_404(SubCategory, slug=subcategory_name, category=category)
-    
-    products = Product.objects.filter(subcategory=subcategory)
-    
-    if sort_option == 'newest':
-        products = products.order_by('-created_at')
-    elif sort_option == 'oldest':
-        products = products.order_by('created_at')
-    elif sort_option == 'price_asc':
-        products = products.order_by('price')
-    elif sort_option == 'price_desc':
-        products = products.order_by('-price')
-    
-    return render(request, 'webshop/articles_display.html', {
-        'category_name': category_name,
-        'subcategory_name': subcategory_name,
-        'products': products
-    })
-
 
 def articles_details_view(request, category_name, subcategory_name, product_slug, color):
     category = get_object_or_404(Category, slug=category_name)
@@ -214,6 +224,7 @@ def articles_details_view(request, category_name, subcategory_name, product_slug
             )
             return redirect('webshop:articles_details', category_name=category_name, subcategory_name=subcategory_name, product_slug=product_slug, color=selected_variation.color.name)
 
+    
     context = {
         'category_name': category_name,
         'subcategory_name': subcategory_name,
@@ -353,50 +364,55 @@ def add_to_cart(request, category_name, subcategory_name, product_slug, color=No
     
 def create_order_view(request):
     if request.method == 'POST':
-        cart = Cart.objects.get(user=request.user.account)
-        cart_items = cart.items.all()
+        # Get the cart for the current user
+        cart = get_object_or_404(Cart, user=request.user.account)
+        cart_items = cart.items_in_cart.all()
 
+        # Create a new order
         order = Order.objects.create(
             account=request.user.account,
-            date_ordered=timezone.now(),
-            status='IP',  
-            payment_method=request.POST.get('payment_method', 'PP') 
+            status='IP',
+            payment_method=request.POST.get('payment_method', 'PP')
         )
 
         for cart_item in cart_items:
             OrderItem.objects.create(
                 order=order,
                 product=cart_item.product,
+                size=cart_item.size,
                 quantity=cart_item.quantity
             )
 
         cart.items_in_cart.all().delete()
-        return redirect('webshop:order_details', order_id=order.id)  
+        
+        return redirect('webshop:order_details', order_id=order.id)
 
     return redirect('webshop:cart')
 
+
 def order_details_view(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    
-    order_items = order.order_items.all()
+    order_items = order.items_in_order.all() 
+
     total_price = sum(item.total_price() for item in order_items)
-    
+
     context = {
         'order': order,
         'order_items': order_items,
-        'total_price': total_price
+        'total_price': total_price,
     }
     return render(request, 'webshop/order_details.html', context)
 
 def orders_history_view(request):
-    orders = Order.objects.all()
-
+    orders = Order.objects.filter(account=request.user.account).order_by('-date_ordered')
+    
     for order in orders:
-        order.total_price = sum(item.total_price() for item in order.order_items.all())
-
+        order.total_price = sum(item.total_price() for item in order.items_in_order.all())
+    
     context = {
-        'orders': orders,
+        'orders': orders
     }
+    
     return render(request, 'webshop/orders_history.html', context)
 
 

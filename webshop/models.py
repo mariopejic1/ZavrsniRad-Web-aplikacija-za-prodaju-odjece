@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.utils import timezone
-import uuid
+import random
+import string
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -55,7 +56,10 @@ class Size(models.Model):
 
     def __str__(self):
         return self.name
-     
+
+def generate_order_number():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
@@ -66,9 +70,9 @@ class Product(models.Model):
     composition = models.TextField()
     origin = models.CharField(max_length=255)
     care_instructions = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now)
-    reference_number = models.CharField(max_length=100, unique=False, default=uuid.uuid4, editable=False)  
-
+    created_at = models.DateTimeField(default=timezone.now) 
+    reference_number = models.CharField(max_length=10, unique=True, default=generate_order_number, editable=False)
+    
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -119,12 +123,12 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     
     def __str__(self):
-        return f"{self.quantity} x {self.product.product.name} in cart of {self.cart.user.name}"
+        return f"{self.quantity} x {self.product.product.name}  {self.cart.user.name}"
     
     def total_price(self):
         return self.quantity * self.product.product.price
-    
-    
+
+
 class Order(models.Model):
     STATUS_CHOICES = (
         ('IP', 'U pripremi'),
@@ -136,22 +140,24 @@ class Order(models.Model):
         ('PP', 'Plaćanje pouzećem'),
         ('IB', 'Internetsko bankarstvo'),  
     )
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='orders')
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
     date_ordered = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='IP')
-    payment_method = models.CharField(max_length=2, choices=PAYMENT_METHOD_CHOICES, default ='PP')
-    order_number = models.CharField(max_length=100, unique=False, default=uuid.uuid4, editable=False)  
+    payment_method = models.CharField(max_length=2, choices=PAYMENT_METHOD_CHOICES, default='PP')
+    order_number = models.CharField(max_length=10, unique=True, default=generate_order_number, editable=False)
+    items = models.ManyToManyField('OrderItem', related_name='order_items', blank=True)  
 
     def __str__(self):
-        return f"Order {self.order_number} for {self.account.name} "
+        return f"Order {self.order_number} for {self.account.name}"
     
 class OrderItem(models.Model):
-    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='order_items')
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='items_in_order') 
     product = models.ForeignKey(ProductVariation, on_delete=models.CASCADE)
+    size = models.CharField(max_length=50, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)
     
     def __str__(self):
-        return f"{self.quantity} x {self.product.product.name} in Order {self.order.id}"
+        return f"{self.quantity} x {self.product.product.name} in Order {self.order.account.name}"
     
     def total_price(self):
         return self.quantity * self.product.product.price

@@ -69,7 +69,7 @@
 
 }
 
-button[type="submit"] {
+.button-container button[type="submit"] {
     background-color: black;
     color: white;
     padding: 10px 20px;
@@ -79,6 +79,6 @@ button[type="submit"] {
     font-size: 16px;
 }
 
-button[type="submit"]:hover {
+.button-container button[type="submit"]:hover {
     color: #ff9900;
 }

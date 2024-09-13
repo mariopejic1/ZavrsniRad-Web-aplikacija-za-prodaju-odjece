@@ -1,36 +1,25 @@
 {% extends 'webshop/base.html' %}
 
-{% block title %}Moje kupovine{% endblock %}
+{% block title %}Povijest Narudžbi{% endblock %}
 
 {% block content %}
-<div class="order-history-container">
-    <h1>Your Order History</h1>
-    
+<div class="orders-history-container">
+    <h1>Povijest Narudžbi</h1>
+
     {% if orders %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Order Number</th>
-                    <th>Date Ordered</th>
-                    <th>Status</th>
-                    <th>Total Price</th>
-                    <th>Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                    <tr>
-                        <td>{{ order.order_number }}</td>
-                        <td>{{ order.date_ordered }}</td>
-                        <td>{{ order.get_status_display }}</td>
-                        <td>€{{ order.total_price|floatformat:2 }}</td>
-                        <td><a href="{% url 'webshop:order_details' order.id %}">Detalji</a></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <ul>
+            {% for order in orders %}
+            <li class="order-history-item">
+                <p><strong>Broj narudžbe:</strong> {{ order.order_number }}</p>
+                <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+                <p><strong>Datum narudžbe:</strong> {{ order.date_ordered }}</p>
+                <p><strong>Ukupno:</strong> € {{ order.total_price }}</p>
+                <a href="{% url 'webshop:order_details' order_id=order.id %}">Pogledaj detalje</a>
+            </li>
+            {% endfor %}
+        </ul>
     {% else %}
-        <p>You have no orders yet.</p>
+        <p>Nema narudžbi u povijesti.</p>
     {% endif %}
 </div>
 {% endblock %}

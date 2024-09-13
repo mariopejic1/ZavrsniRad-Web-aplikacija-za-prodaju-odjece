@@ -31,7 +31,7 @@
     border: 1px solid #ccc;
 }
 
-button {
+.register-container button {
     background-color: black;
     color: white;
     border: none;
@@ -41,7 +41,7 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.register-container button:hover {
     background-color: gray;
 }
 
