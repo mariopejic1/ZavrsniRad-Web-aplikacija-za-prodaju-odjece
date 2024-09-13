@@ -157,7 +157,7 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     
     def __str__(self):
-        return f"{self.quantity} x {self.product.product.name} in Order {self.order.account.name}"
+        return f"{self.size}"
     
     def total_price(self):
         return self.quantity * self.product.product.price

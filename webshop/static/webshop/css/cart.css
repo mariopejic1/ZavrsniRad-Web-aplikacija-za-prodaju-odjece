@@ -1,10 +1,9 @@
 .cart-container {
     width: 50%;
-    margin: 30px auto 30px auto;
-    
+    margin: 30px auto;
 }
 
-.cart-container h1{
+.cart-container h1 {
     text-align: center;
     font-size: 30px;
     font-weight: bold;
@@ -16,7 +15,7 @@
     align-items: center;
 }
 
-.cart-items ul{
+.cart-items ul {
     padding: 0;
 }
 
@@ -29,18 +28,18 @@
 }
 
 .cart-item-image {
-    flex: 1; 
+    flex: 1;
     margin-right: 10px;
 }
 
 .cart-item-image img {
     height: 250px;
-    max-width: 100%; 
-    object-fit: cover; 
+    max-width: 100%;
+    object-fit: fill;
 }
 
 .cart-item-details {
-    flex: 2; 
+    flex: 2;
     margin-right: 10px;
 }
 
@@ -50,8 +49,8 @@
 }
 
 .cart-item-actions {
-    flex: 1; 
-    text-align: right; 
+    flex: 1;
+    text-align: right;
 }
 
 .remove-item-form {
@@ -74,64 +73,39 @@
     background-color: darkgray;
 }
 
-.delivery-info {
+.delivery-info,  .total {
     border-bottom: 1px solid black;
     margin-bottom: 20px;
 }
-.delivery-info h3{
+
+.delivery-info h3, .payment-info h3, .total h3 {
     font-size: 20px;
     font-weight: bold;
 }
 
-.delivery-info p{
+.delivery-info p, .payment-info label, .total p {
     font-size: 16px;
-    margin: 5px 0 5px 0;
+    margin: 5px 0;
 }
 
-.payment-info {
-    border-bottom: 1px solid black;
+.payment-info{
     margin-bottom: 20px;
 }
-.payment-info h3{
-    font-size: 20px;
-    font-weight: bold;
-}
 
-.payment-info label{
-    font-size: 16px;
-    margin: 5px 0 5px 0;
-}
-
-.total {
-    margin-bottom: 20px;
-}
-.total h3{
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.total p{
-    font-size: 16px;
-    margin: 5px 0 5px 0;
-}
-
-.total button{
+.payment-info button {
     margin-top: 20px;
-    text-align: center; 
-}
-
-.total button {
+    text-align: center;
     background-color: black;
     color: white;
-    padding: 5px 30px; 
+    padding: 5px 30px;
     font-size: 20px;
-    border: none; 
+    border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.total button:hover {
-    background-color: darkgray; 
+.payment-info button:hover {
+    background-color: darkgray;
 }
 
 .empty-cart-message {

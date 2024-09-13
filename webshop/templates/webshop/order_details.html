@@ -1,45 +1,66 @@
 {% extends 'webshop/base.html' %}
 
+{% load static %}
+
 {% block title %}Detalji narudžbe{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'webshop/css/order_details.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="order-details-container">
-    <h2>Detalji Narudžbe</h2>
-
-    <p><strong>Broj narudžbe:</strong> {{ order.order_number }}</p>
-    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
-    <p><strong>Datum narudžbe:</strong> {{ order.date_ordered }}</p>
-    <p><strong>Način plačanja:</strong> {{ order.get_payment_method_display }}</p>
-    <p><strong>Ukupno:</strong> € {{ total_price }}</p>
     
-    <h2>Informacije o kupcu</h2>
-    <p><strong>Ime:</strong> {{ order.account.name }}</p>
-    <p><strong>Prezime:</strong> {{ order.account.surname }}</p>
-    <p><strong>Adresa:</strong> {{ order.account.street }} {{ order.account.house_number }}, 
-        {{ order.account.postal_number }} {{ order.account.city }}</p>
-    <p><strong>Telefon:</strong> {{ order.account.phone }}</p>
-    <p><strong>Email:</strong> {{ order.account.email }}</p>
+    <div class="order-details-info">
+        <div>
+            <h2><strong>Broj narudžbe:</strong> {{ order.order_number }}</h2>
+            <p>Status: {{ order.get_status_display }}</p>
+        </div>
 
-    <h2>Stavke narudžbe</h2>
-    <ul>
-        {% for item in order_items %}
-        <li class="order-item">
-            <div class="order-item-image">
-                <img src="{{ item.product.main_image.url }}" alt="{{ item.product.product.name }}">
-            </div>
-            <div class="order-item-details">
-                <p><strong>{{ item.product.product.name }}</strong></p>
-                <p>Boja: {{ item.product.color.name }}</p>
-                <p>Veličina: {{ item.size }}</p>
-                <p>Količina: {{ item.quantity }}</p>
-            </div>
-            <div class="order-item-actions">
-                <p><strong>€ {{ item.total_price }}</strong></p>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
+        <div>
+            <h2>Datum kupnje</h2>
+            <p>{{ order.date_ordered }}</p>
+        </div>
+        
+        <div>
+            <h2>Podaci za dostavu</h2>
+            <p>{{ order.account.name }} {{ order.account.surname }}</p>
+            <p>{{ order.account.street }} {{ order.account.house_number }}, {{ order.account.postal_number }} {{ order.account.city }}</p>
+            <p>{{ order.account.phone }}</p>
+            <p>{{ order.account.email }}</p>
+        </div>
+        
+        <div>
+            <h2>Način plaćanja:</h2>
+            <p>{{ order.get_payment_method_display }}</p>
+        </div>
 
+        <div>
+            <p><strong>Ukupno:</strong> € {{ total_price }}</p>
+        </div>
+    </div>
+
+    <div class="order-items">
+        <h2>Stavke narudžbe</h2>
+        <ul>
+            {% for item in order_items %}
+            <li class="order-item">
+                <div class="order-item-image">
+                    <img src="{{ item.product.main_image.url }}" alt="{{ item.product.product.name }}">
+                </div>
+                <div class="order-item-details">
+                    <p><strong>{{ item.product.product.name }}</strong></p>
+                    <p>{{ item.product.color.name }}</p>
+                    <p>{{ item.size }}</p>
+                    <p>Količina: {{ item.quantity }}</p>
+                </div>
+                <div class="order-item-actions">
+                    <p><strong>€ {{ item.product.product.price }}</strong></p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 
 </div>
 {% endblock %}

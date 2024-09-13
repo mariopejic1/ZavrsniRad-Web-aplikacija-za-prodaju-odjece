@@ -380,13 +380,13 @@ def create_order_view(request):
         )
 
         for cart_item in cart_items:
+            size_name = cart_item.size.size.name if cart_item.size else ''
             OrderItem.objects.create(
                 order=order,
                 product=cart_item.product,
-                size=cart_item.size,
+                size=size_name,
                 quantity=cart_item.quantity
             )
-
         cart.items_in_cart.all().delete()
         
         return redirect('webshop:order_details', order_id=order.id)
