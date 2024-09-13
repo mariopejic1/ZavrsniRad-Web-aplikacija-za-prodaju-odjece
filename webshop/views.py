@@ -14,12 +14,36 @@ def base_view(request):
     return render(request, 'webshop/base.html', context)
 
 def female_homepage_view(request):
-    context = {}
-    return render(request, 'webshop/female_homepage.html', context)
+    category = Category.objects.get(name='zene')
+    subcategory = SubCategory.objects.filter(category=category).first()
+
+    latest_products = ProductVariation.objects.filter(
+        product__category=category
+    ).order_by('-product__created_at')[:10]
+
+    context = {
+        'subcategories': SubCategory.objects.filter(category=category),
+        'latest_products': latest_products,
+        'category_name': category.slug,
+        'subcategory_name': subcategory.slug if subcategory else 'sve',
+    }
+    return render(request, 'webshop/homepage.html', context)
 
 def male_homepage_view(request):
-    context = {}
-    return render(request, 'webshop/male_homepage.html', context)
+    category = Category.objects.get(name='muskarci')
+    subcategory = SubCategory.objects.filter(category=category).first()
+
+    latest_products = ProductVariation.objects.filter(
+        product__category=category
+    ).order_by('-product__created_at')[:10]
+
+    context = {
+        'subcategories': SubCategory.objects.filter(category=category),
+        'latest_products': latest_products,
+        'category_name': category.slug,
+        'subcategory_name': subcategory.slug if subcategory else 'sve',
+    }
+    return render(request, 'webshop/homepage.html', context)
 
 def login_view(request):
     if request.method == 'POST':

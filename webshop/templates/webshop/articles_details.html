@@ -68,8 +68,8 @@
                         </select>
                         <input type="hidden" name="quantity" value="1">
                         <input type="hidden" name="product_variation_id" value="{{ selected_variation.id }}">
-                        {% if user.is_authenticated and not user.superuser %}
-                            <button type="submit">Dodaj u košaricu</button>
+                        {% if user.is_authenticated and not user.is_superuser %}
+                        <button type="submit">Dodaj u košaricu</button>
                         {% endif %}
                     </form>
                 </div>

@@ -57,11 +57,6 @@ class CommentAdmin(admin.ModelAdmin):
     
 admin.site.register(Comment, CommentAdmin)
 
-@admin.register(CartItem)
-class CartItemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'cart', 'product', 'quantity')  
-    list_filter = ('cart', 'product')  
-
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 1
@@ -70,9 +65,9 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_number', 'account', 'status', 'date_ordered', 'payment_method')
-    list_filter = ('status', 'payment_method', 'date_ordered')
+    list_filter = ('status', 'payment_method', 'date_ordered')  
     search_fields = ('order_number', 'account__name', 'account__surname')
-    readonly_fields = ('order_number', 'date_ordered', 'status', 'payment_method')
+    readonly_fields = ('order_number', 'date_ordered', 'payment_method')  
     inlines = [OrderItemInline]
 
 admin.site.register(Order, OrderAdmin)

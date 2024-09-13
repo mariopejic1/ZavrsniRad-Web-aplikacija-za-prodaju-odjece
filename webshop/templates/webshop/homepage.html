@@ -1,0 +1,169 @@
+{% extends 'webshop/base.html' %}
+
+{% load static %}
+
+{% block title %}{{ category_name|title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .category-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 100%; 
+    position: relative;
+    margin: 0;
+  }
+
+  .category-card a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .category-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .category-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 2rem;
+    padding: 10px;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .latest-products-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 40px 0; 
+    background-color: #f8f9fa; 
+  }
+
+  .latest-products-section h2 {
+    text-align: center;
+    font-size: 2.5rem; 
+    font-weight: bold; 
+    margin-bottom: 30px; 
+    color: #333; 
+    padding-bottom: 10px; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
+  }
+
+  .category-section-title {
+    text-align: center;
+    font-size: 2.5rem; 
+    font-weight: bold; 
+    margin: 40px 0 30px; 
+    color: #333; 
+    padding-bottom: 10px; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
+  }
+
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh; 
+    margin: 0;
+    position: relative;
+    overflow: hidden; 
+  }
+
+  .product-card a {
+    display: block;
+    width: 100%;
+    height: 100%; 
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 100%; 
+    object-fit: cover; 
+  }
+
+  .product-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 1.4rem;
+    padding: 10px;
+    margin: 0;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .container-fluid {
+    padding: 0;
+  }
+
+  .row-cols-2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0; 
+  }
+
+  .col {
+    flex: 1 0 50%; 
+    max-width: 50%;
+    padding: 0; 
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="category-section">
+    <h2 class="category-section-title text-uppercase">Istraži Kategorije</h2>
+    {% for subcategory in subcategories %}
+    <div class="category-card">
+      <a href="{% url 'webshop:articles_display' category_name=subcategory.category.slug subcategory_name=subcategory.slug %}">
+        <img src="{% if subcategory.image %}{{ subcategory.image.url }}{% else %}{% static 'default-placeholder.png' %}{% endif %}" alt="{{ subcategory.name }}">
+      </a>
+      <h5 class="category-title">{{ subcategory.name }}</h5>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="latest-products-section">
+    <h2 class="text-uppercase">Istraži Najnovije Proizvode</h2>
+    <div class="container-fluid">
+      <div class="row row-cols-2 g-0"> 
+        {% for product_variation in latest_products %}
+        <div class="col">
+          <div class="product-card">
+            <a href="{% url 'webshop:articles_details' category_name=category_name subcategory_name=subcategory_name product_slug=product_variation.product.slug color=product_variation.color.name %}">
+              <img src="{{ product_variation.main_image.url }}" alt="{{ product_variation.product.name }}">
+            </a>
+            <h5 class="product-title">{{ product_variation.product.name }}</h5>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
