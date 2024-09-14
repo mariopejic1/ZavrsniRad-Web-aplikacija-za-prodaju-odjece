@@ -11,19 +11,19 @@
     <div class="product-details-container">
         <div class="product-images">
             <a href="#image1">
-                <img src="{{ selected_variation.main_image.url }}" alt="{{ selected_variation.color.name }}" class="product-image">
+                <img src="{{ selected_variation.main_image.url }}" alt="{{ selected_variation.color.slug }}" class="product-image">
             </a>
         
             {% for image in variation_images %}
                 <a href="#image{{ forloop.counter }}">
-                    <img src="{{ image.image.url }}" alt="{{ selected_variation.color.name }}" class="product-image">
+                    <img src="{{ image.image.url }}" alt="{{ selected_variation.color.slug }}" class="product-image">
                 </a>
             {% endfor %}
         </div>
         
         <div id="image1" class="modal">
             <div class="modal-content">
-                <img src="{{ selected_variation.main_image.url }}" alt="{{ selected_variation.color.name }}">
+                <img src="{{ selected_variation.main_image.url }}" alt="{{ selected_variation.color.slug }}">
                 <a href="#" class="modal-close">&times;</a>
             </div>
         </div>
@@ -31,7 +31,7 @@
         {% for image in variation_images %}
             <div id="image{{ forloop.counter }}" class="modal">
                 <div class="modal-content">
-                    <img src="{{ image.image.url }}" alt="{{ selected_variation.color.name }}">
+                    <img src="{{ image.image.url }}" alt="{{ selected_variation.color.slug }}">
                     <a href="#" class="modal-close">&times;</a>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                     <h3>Dostupno u bojama:</h3>
                     <div class="colors">
                         {% for variation in product.variations.all %}
-                        <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug variation.color.name %}">
+                        <a href="{% url 'webshop:articles_details' category_name subcategory_name product.slug variation.color.slug %}">
                             {{ variation.color.name }}
                         </a>
                         {% endfor %}
@@ -56,18 +56,19 @@
                 </div>
 
                 <div class="size-options">
-                    <form method="post" action="{% url 'webshop:add_to_cart' category_name subcategory_name product.slug selected_variation.color.name %}">
+                    <form method="post" action="{% url 'webshop:add_to_cart' category_name subcategory_name product.slug selected_variation.color.slug %}">
                         {% csrf_token %}
                         <h3>Izaberite veličinu:</h3>
                         <select name="size" id="size">
                             {% for size in available_sizes %}
-                                <option value="{{ size.size.id }}">{{ size.size.name }}</option>
+                                <option value="{{ size.id }}">{{ size.size.name }}</option>
                             {% empty %}
                                 <option disabled>Nema dostupnih veličina</option>
                             {% endfor %}
                         </select>
                         <input type="hidden" name="quantity" value="1">
                         <input type="hidden" name="product_variation_id" value="{{ selected_variation.id }}">
+                        <input type="hidden" name="color" value="{{ selected_variation.color.slug }}">
                         {% if user.is_authenticated and not user.is_superuser %}
                         <button type="submit">Dodaj u košaricu</button>
                         {% endif %}
@@ -77,12 +78,12 @@
                 <div class="desc">
                     <div>
                         <h3>OPIS</h3>
-                        <p>-{{ product.description }}</p>
+                        <p>- {{ product.details }}</p>
                     </div>
 
                     <div>
-                        <h3>PODRIJETLO</h3>
-                        <p>- {{ product.origin }}</p>
+                        <h3>MATERIJAL</h3>
+                        <p>- {{ product.composition }}</p>
                     </div>
 
                     <div></div>
@@ -107,7 +108,7 @@
         </div>
     
         {% if user.is_authenticated %}
-        <form method="post" action="{% url 'webshop:articles_details' category_name subcategory_name product.slug selected_variation.color.name %}">
+        <form method="post" action="{% url 'webshop:articles_details' category_name subcategory_name product.slug selected_variation.color.slug %}">
             {% csrf_token %}
             <textarea name="text" rows="4" placeholder="Ostavite komentar..."></textarea>
             <br>

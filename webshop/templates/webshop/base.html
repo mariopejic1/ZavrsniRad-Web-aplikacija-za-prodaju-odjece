@@ -62,6 +62,12 @@
         </nav>
     </div>
     
+    {% if not user.is_authenticated %}
+    <div class="alert alert-warning text-center" role="alert">
+        Samo prijavljeni korisnici mogu kupovati i komentirati proizvode!</a>
+    </div>
+    {% endif %}
+
     <div class="content">
         {% block content %}{% endblock %}
     </div>

@@ -17,7 +17,7 @@
 .product-images a {
     display: block;
     width: calc(50% - 2px);
-    height: 550px;
+    height: 600px;
 }
 
 .product-images img {
@@ -103,17 +103,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    text-align: center;
+    text-align: left;    
     margin-bottom: 40px;
 }
 
 .name-price h3{
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
 }
 
 .name-price p{
-    font-size: 25px;
+    font-size: 20px;
+    text-align: right;
 }
 
 .color-options{

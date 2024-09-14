@@ -30,8 +30,8 @@ class SubCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Color)
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
+    list_display = ('name', 'slug')
+    search_fields = ('name', 'slug')
 
 @admin.register(Size)
 class SizeAdmin(admin.ModelAdmin):
@@ -56,6 +56,11 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('poster', 'product', 'text', 'created_at')  
     
 admin.site.register(Comment, CommentAdmin)
+
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = ('id', 'cart', 'product', 'quantity')  
+    list_filter = ('cart', 'product')  
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem

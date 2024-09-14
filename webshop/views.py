@@ -7,7 +7,8 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Q
-from django.db.models import Sum
+from django.utils.http import unquote
+from django.http import HttpResponseNotFound
 
 def base_view(request):
     context = {}
@@ -19,7 +20,7 @@ def female_homepage_view(request):
 
     latest_products = ProductVariation.objects.filter(
         product__category=category
-    ).order_by('-product__created_at')[:10]
+    ).order_by('-product__created_at')[:8]
 
     context = {
         'subcategories': SubCategory.objects.filter(category=category),
@@ -35,7 +36,7 @@ def male_homepage_view(request):
 
     latest_products = ProductVariation.objects.filter(
         product__category=category
-    ).order_by('-product__created_at')[:10]
+    ).order_by('-product__created_at')[:8]
 
     context = {
         'subcategories': SubCategory.objects.filter(category=category),
@@ -227,7 +228,7 @@ def articles_details_view(request, category_name, subcategory_name, product_slug
 
     if color:
         try:
-            selected_variation = product.variations.get(color__name=color)
+            selected_variation = product.variations.get(color__slug=color)
         except ProductVariation.DoesNotExist:
             selected_variation = product.variations.first()
     else:
@@ -246,7 +247,7 @@ def articles_details_view(request, category_name, subcategory_name, product_slug
                 text=text,
                 created_at=timezone.now()
             )
-            return redirect('webshop:articles_details', category_name=category_name, subcategory_name=subcategory_name, product_slug=product_slug, color=selected_variation.color.name)
+            return redirect('webshop:articles_details', category_name=category_name, subcategory_name=subcategory_name, product_slug=product_slug, color=selected_variation.color.slug)
 
     
     context = {
@@ -365,7 +366,7 @@ def add_to_cart(request, category_name, subcategory_name, product_slug, color=No
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity', 1))
         product_variation_id = request.POST.get('product_variation_id')
-        size_id = request.POST.get('size')  
+        size_id = request.POST.get('size')
         
         product_variation = get_object_or_404(ProductVariation, id=product_variation_id)
         

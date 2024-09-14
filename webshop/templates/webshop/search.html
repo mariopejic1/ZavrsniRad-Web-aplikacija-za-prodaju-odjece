@@ -63,12 +63,12 @@
     {% for variation in filtered_product_variations %}
       <div class="article">
         <div class="article-image-wrapper">
-          <a href="{% url 'webshop:articles_details' variation.product.category.slug variation.product.subcategory.slug variation.product.slug variation.color.name %}">
+          <a href="{% url 'webshop:articles_details' variation.product.category.slug variation.product.subcategory.slug variation.product.slug variation.color.slug %}">
             <img src="{{ variation.main_image.url }}" alt="{{ variation.product.name }}" class="main-image">
           </a>
         </div>
         <div class="article-info">
-          <a href="{% url 'webshop:articles_details' variation.product.category.slug variation.product.subcategory.slug variation.product.slug variation.color.name %}">
+          <a href="{% url 'webshop:articles_details' variation.product.category.slug variation.product.subcategory.slug variation.product.slug variation.color.slug %}">
             <h2>{{ variation.product.name }} - {{ variation.color.name }}</h2>
           </a>
           <p class="price">€ {{ variation.product.price }}</p>

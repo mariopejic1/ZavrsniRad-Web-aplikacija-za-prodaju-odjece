@@ -45,10 +45,17 @@ class SubCategory(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} - {self.category}"
 
 class Color(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=False, blank=True, editable=True, null = True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -69,7 +76,6 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     details = models.TextField()
     composition = models.TextField()
-    origin = models.CharField(max_length=255)
     care_instructions = models.TextField()
     created_at = models.DateTimeField(default=timezone.now) 
     reference_number = models.CharField(max_length=10, unique=True, default=generate_order_number, editable=False)

@@ -155,7 +155,7 @@
         {% for product_variation in latest_products %}
         <div class="col">
           <div class="product-card">
-            <a href="{% url 'webshop:articles_details' category_name=category_name subcategory_name=subcategory_name product_slug=product_variation.product.slug color=product_variation.color.name %}">
+            <a href="{% url 'webshop:articles_details' category_name=category_name subcategory_name=subcategory_name product_slug=product_variation.product.slug color=product_variation.color.slug %}">
               <img src="{{ product_variation.main_image.url }}" alt="{{ product_variation.product.name }}">
             </a>
             <h5 class="product-title">{{ product_variation.product.name }}</h5>
