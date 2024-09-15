@@ -57,22 +57,21 @@ class CommentAdmin(admin.ModelAdmin):
     
 admin.site.register(Comment, CommentAdmin)
 
-@admin.register(CartItem)
-class CartItemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'cart', 'product', 'quantity')  
-    list_filter = ('cart', 'product')  
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    extra = 1
     fields = ('product', 'size', 'quantity', 'total_price')
     readonly_fields = ('total_price',)
+    extra = 0  
+    max_num = 0  
+    can_delete = False
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_number', 'account', 'status', 'date_ordered', 'payment_method')
     list_filter = ('status', 'payment_method', 'date_ordered')  
     search_fields = ('order_number', 'account__name', 'account__surname')
     readonly_fields = ('order_number', 'date_ordered', 'payment_method')  
+    exclude = ('items',)
     inlines = [OrderItemInline]
 
 admin.site.register(Order, OrderAdmin)
