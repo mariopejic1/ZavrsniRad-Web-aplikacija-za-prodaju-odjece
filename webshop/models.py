@@ -146,6 +146,7 @@ class Order(models.Model):
     PAYMENT_METHOD_CHOICES = (
         ('PP', 'Plaćanje pouzećem'),
         ('IB', 'Internetsko bankarstvo'),  
+        ('CC', 'Kartično plaćanje'),
     )
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     date_ordered = models.DateTimeField(auto_now_add=True)

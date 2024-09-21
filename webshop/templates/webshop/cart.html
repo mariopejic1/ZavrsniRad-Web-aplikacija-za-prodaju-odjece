@@ -23,7 +23,7 @@
                     <div class="cart-item-details">
                         <p><strong>{{ item.product.product.name }}</strong></p>
                         <p>Boja: {{ item.product.color.name }}</p>
-                        <p>Veličina: {{ item.size }}</p>
+                        <p>Veličina: {{ item.size.size }}</p>
                         <p>Količina: {{ item.quantity }}</p>
                         <form action="{% url 'webshop:remove_cart_item' item.id %}" method="post" class="remove-item-form">
                             {% csrf_token %}
@@ -57,8 +57,13 @@
                 <h3>Metoda plaćanja</h3>
                 <form action="{% url 'webshop:create_order' %}" method="post">
                     {% csrf_token %}
-                    <label><input type="radio" name="payment_method" value="PP" required> Plaćanje pouzećem</label><br>
-                    <label>- Internetsko bankarstvo (onemogućeno)</label><br>
+                    <label>
+                        <input type="radio" name="payment_method" value="PP" required> Plaćanje pouzećem
+                    </label>
+                    <label>
+                        <input type="radio" name="payment_method" value="CC" required> Kartično plaćanje
+                    </label>
+                    <label>- Internetsko bankarstvo (onemogućeno)</label>                        
             
                     {% if messages %}
                         {% for message in messages %}

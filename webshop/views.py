@@ -9,6 +9,8 @@ from django.dispatch import receiver
 from django.db.models import Q
 from django.utils.http import unquote
 from django.http import HttpResponseNotFound
+import re
+from django.views.decorators.cache import never_cache
 
 def base_view(request):
     context = {}
@@ -301,6 +303,8 @@ def search_view(request):
     elif sort == 'price_desc':
         product_variations = product_variations.order_by('-product__price')
 
+    product_variations = product_variations[:100]
+
     context = {
         'filtered_product_variations': product_variations,
         'colors': colors,
@@ -390,33 +394,68 @@ def add_to_cart(request, category_name, subcategory_name, product_slug, color=No
 def create_order_view(request):
     if request.method == 'POST':
         cart = get_object_or_404(Cart, user=request.user.account)
-        cart_items = cart.items_in_cart.all()
-
         payment_method = request.POST.get('payment_method')
 
         if not payment_method:
             messages.error(request, 'Molimo vas da odaberete način plaćanja.')
             return redirect('webshop:cart')
 
-        order = Order.objects.create(
-            account=request.user.account,
-            status='IP',
-            payment_method=payment_method
-        )
+        if payment_method == 'CC':
+            cardholder = request.POST.get('card_holder')
+            cardnumber = request.POST.get('card_number')
+            expiry = request.POST.get('expiry_date')
+            cvv = request.POST.get('cvv')
 
-        for cart_item in cart_items:
-            size_name = cart_item.size.size.name if cart_item.size else ''
+            if not all([cardholder, cardnumber, expiry, cvv]):
+
+                return redirect('webshop:card_payment')
+            
+            if not re.match(r'^\d{16}$', cardnumber):
+                messages.error(request, "Broj kartice mora imati 16 znamenki.")
+                return redirect('webshop:card_payment')
+
+            if not re.match(r'^\d{3}$', cvv):
+                messages.error(request, "CVV mora imati 3 znamenke.")
+                return redirect('webshop:card_payment')
+
+            if not re.match(r'^(0[1-9]|1[0-2])\/\d{2}$', expiry):
+                messages.error(request, "Datum isteka mora biti u formatu MM/YY.")
+                return redirect('webshop:card_payment')
+            
+            order = Order.objects.create(account=request.user.account, status='IP', payment_method='CC')
+
+            for cart_item in cart.items_in_cart.all():
+                OrderItem.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    size=cart_item.size.size.name if cart_item.size else '',
+                    quantity=cart_item.quantity
+                )
+            
+            cart.items_in_cart.all().delete()
+
+            return redirect('webshop:cart')
+
+        order = Order.objects.create(account=request.user.account, status='IP', payment_method=payment_method)
+
+        for cart_item in cart.items_in_cart.all():
             OrderItem.objects.create(
                 order=order,
                 product=cart_item.product,
-                size=size_name,
+                size=cart_item.size.size.name if cart_item.size else '',
                 quantity=cart_item.quantity
             )
-        cart.items_in_cart.all().delete()
         
-        return redirect('webshop:order_details', order_id=order.id)
+        cart.items_in_cart.all().delete()
+ 
+        return redirect('webshop:cart')
 
     return redirect('webshop:cart')
+
+@never_cache
+def card_payment_view(request):
+
+    return render(request, 'webshop/card_payment.html')
 
 
 def order_details_view(request, order_id):

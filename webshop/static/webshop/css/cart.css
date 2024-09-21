@@ -116,3 +116,8 @@
     color: red;
     font-size: 12px;
 }
+
+.payment-info label {
+    display: block;
+}
+

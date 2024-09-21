@@ -25,5 +25,6 @@ urlpatterns = [
     path('cart/update/<int:item_id>/', views.update_cart_item, name='update_cart_item'),
     path('<slug:category_name>/<slug:subcategory_name>/<slug:product_slug>/<slug:color>/add-to-cart/', views.add_to_cart, name='add_to_cart'),
     path('search/', views.search_view, name='search'),   
+    path('card_payment/', views.card_payment_view, name='card_payment'),
     
 ]
