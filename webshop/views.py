@@ -139,7 +139,6 @@ def profile_view(request):
     if request.method == 'POST':
         user_account.name = request.POST.get('name')
         user_account.surname = request.POST.get('surname')
-        user_account.phone = request.POST.get('phone')
         user_account.save()
 
         return redirect('webshop:profile')
@@ -154,7 +153,10 @@ def personal_data_view(request):
         user_account.surname = request.POST.get('surname')
         user_account.phone = request.POST.get('phone')
         user_account.email = request.POST.get('email')
-        user_account.home_address = request.POST.get('home_address')
+        user_account.city = request.POST.get('city')
+        user_account.postal_number = request.POST.get('postal_number')
+        user_account.street = request.POST.get('street')
+        user_account.house_number = request.POST.get('house_number')
         iban = request.POST.get('iban')
         bank = request.POST.get('bank')
         
